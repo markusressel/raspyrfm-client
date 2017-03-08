@@ -47,7 +47,7 @@ print(rev_telecontrol.generate_code(actions.OFF))
 
 # print(rev_telecontrol.generate_code(actions.DIMM))
 
-rfm_client.send(rev_telecontrol, actions.OFF)
+rfm_client.send(rev_telecontrol, actions.ON)
 
 print("")
 

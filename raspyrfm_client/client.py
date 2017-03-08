@@ -95,11 +95,9 @@ class RaspyRFMClient:
 
         :return: ip of the detected gateway
         """
-        #cs = socket.socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
         cs = socket.socket(AF_INET, SOCK_DGRAM)
-        #cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+        cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-        #cs.setsockopt(IPPROTO_UDP, IP_MULTICAST_TTL, 32)
 
         cs.sendto(self._broadcast_message, ('255.255.255.255', self._port))
 
@@ -109,31 +107,37 @@ class RaspyRFMClient:
         data = None
         try:
             data, address = cs.recvfrom(4096)
-            print("Received message: \"%s\"", data)
+            print("Received message: \"%s\"" % data)
+            print("Address: " + address[0])
+            
+            message = data.decode()
+
+            # abort if response is invalid
+            if not message.startswith('HCGW:'):
+                print("Invalid response")
+                return None
+
+            # RaspyRFM response:
+            # "HCGW:VC:Seegel Systeme;MC:RaspyRFM;FW:1.00;IP:192.168.2.124;;"
+
+            # try to parse data if valid
+            self._manufacturer = message[message.index('VC:') + 3:message.index(';MC')]
+            self._model = message[message.index('MC:') + 3:message.index(';FW')]
+            self._firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
+            parsed_host = message[message.index('IP:') + 3:message.index(';;')]
+            
+            if self._host is None:
+                if parsed_host != address[0]:
+                    self._host = address[0]
+                else:
+                    self._host = parsed_host
+
+            return parsed_host
+            
         except socket.timeout:
             print("Timeout")
             print("Data: " + str(data))
             return None
-
-        message = data.decode('utf-8')
-
-        # abort if response is invalid
-        if not message.startswith('HCGW:'):
-            print("Invalid response")
-            return None
-
-        # RaspyRFM response:
-        # "HCGW:VC:Seegel Systeme;MC:RaspyRFM;FW:1.00;IP:192.168.2.124;;"
-
-        # try to parse data if valid
-        self._manufacturer = message[message.index('VC:'):message.index(';MC')]
-        self._model = message[message.index('MC:'):message.index(';FW')]
-        self._firmware_version = message[message.index('FW:'):message.index(';IP')]
-        parsed_host = message[message.index('IP:'):message.index(';;')]
-        if self._host is None:
-            self._host = parsed_host
-
-        return parsed_host
 
     def get_manufacturer(self) -> str:
         """
