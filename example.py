@@ -5,6 +5,7 @@ from raspyrfm_client.device.manufacturer import manufacturer_constants
 """ RaspyRFM Client """
 # rfm_client = RaspyRFMClient("192.168.2.40")
 rfm_client = RaspyRFMClient()
+print(rfm_client.search())
 
 rfm_client.list_supported_devices()
 
@@ -13,6 +14,20 @@ print("Port: " + str(rfm_client.get_port()))
 print("Manufacturer: " + str(rfm_client.get_manufacturer()))
 print("Model: " + str(rfm_client.get_model()))
 print("Firmware: " + str(rfm_client.get_firmware_version()))
+
+""" Elro """
+print("")
+elro_ab440s = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
+print(
+    elro_ab440s.get_manufacturer() +
+    " " +
+    elro_ab440s.get_model() +
+    ": " +
+    str(elro_ab440s.get_supported_actions()))
+
+elro_ab440s.setup_channel(dips=[False, False, False, False, False, False, False, False, False, False])
+print(elro_ab440s.generate_code(actions.ON))
+print(elro_ab440s.generate_code(actions.OFF))
 
 """ REV """
 print("")
@@ -32,7 +47,7 @@ print(rev_telecontrol.generate_code(actions.OFF))
 
 # print(rev_telecontrol.generate_code(actions.DIMM))
 
-rfm_client.send(rev_telecontrol, actions.ON)
+rfm_client.send(rev_telecontrol, actions.OFF)
 
 print("")
 
@@ -82,3 +97,17 @@ print(
 intertechno_cmr_500.setup_channel(master='A', slave=1)
 print(intertechno_cmr_500.generate_code(actions.ON))
 print(intertechno_cmr_500.generate_code(actions.OFF))
+
+""" Intertek """
+print("")
+intertek = rfm_client.get_device(manufacturer_constants.INTERTEK, manufacturer_constants.MODEL_1919361)
+print(
+    intertek.get_manufacturer() +
+    " " +
+    intertek.get_model() +
+    ": " +
+    str(intertek.get_supported_actions()))
+
+intertek.setup_channel(dips=[False, False, False, False, False, False, False, False, False, False])
+print(intertek.generate_code(actions.ON))
+print(intertek.generate_code(actions.OFF))

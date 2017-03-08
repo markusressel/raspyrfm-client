@@ -17,9 +17,15 @@ from raspyrfm_client.device.manufacturer.Intertechno.PAR1500 import PAR1500
 from raspyrfm_client.device.manufacturer.Intertechno.YCR1000 import YCR1000
 from raspyrfm_client.device.manufacturer.REV.Ritter import Ritter
 from raspyrfm_client.device.manufacturer.REV.Telecontrol import Telecontrol
+from raspyrfm_client.device.manufacturer.elro.AB440S import AB440S
 
 import socket
-from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
+
+from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST, IPPROTO_UDP, IP_MULTICAST_TTL
+
+from raspyrfm_client.device.manufacturer.intertek.Model1919361 import Model1919361
+from raspyrfm_client.device.manufacturer.mumbi.MFS300 import MFS300
+from raspyrfm_client.device.manufacturer.pollin_electronic.Set2605 import Set2605
 
 
 class RaspyRFMClient:
@@ -29,11 +35,12 @@ class RaspyRFMClient:
 
     """
     This dictionary maps manufacturer and model constants to their implementation class
+
+    TODO: find implementations dynamically (if possible)
     """
     __manufacturer_model_dict = {
-        manufacturer_constants.REV: {
-            manufacturer_constants.Telecontrol: Telecontrol,
-            manufacturer_constants.Ritter: Ritter
+        manufacturer_constants.ELRO: {
+            manufacturer_constants.AB440S: AB440S
         },
         manufacturer_constants.INTERTECHNO: {
             manufacturer_constants.CMR_300: CMR300,
@@ -46,10 +53,23 @@ class RaspyRFMClient:
             manufacturer_constants.PA3_1000: PA31000,
             manufacturer_constants.PAR_1500: PAR1500,
             manufacturer_constants.YCR_1000: YCR1000
-        }
+        },
+        manufacturer_constants.INTERTEK: {
+            manufacturer_constants.MODEL_1919361: Model1919361
+        },
+        manufacturer_constants.MUMBI: {
+            manufacturer_constants.M_FS300: MFS300
+        },
+        manufacturer_constants.POLLIN_ELECTRONIC: {
+            manufacturer_constants.SET_2605: Set2605
+        },
+        manufacturer_constants.REV: {
+            manufacturer_constants.Telecontrol: Telecontrol,
+            manufacturer_constants.Ritter: Ritter
+        },
     }
 
-    _broadcast_message = "SEARCH HCGW"
+    _broadcast_message = b'SEARCH HCGW'
 
     def __init__(self, host: str = None, port: int = 49880):
         """
@@ -75,19 +95,24 @@ class RaspyRFMClient:
 
         :return: ip of the detected gateway
         """
+        #cs = socket.socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
         cs = socket.socket(AF_INET, SOCK_DGRAM)
-        cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+        #cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-        cs.sendto(bytes(self._broadcast_message, "utf-8"), ('255.255.255.255', 49880))
+        #cs.setsockopt(IPPROTO_UDP, IP_MULTICAST_TTL, 32)
+
+        cs.sendto(self._broadcast_message, ('255.255.255.255', self._port))
 
         cs.setblocking(True)
         cs.settimeout(1)
 
+        data = None
         try:
             data, address = cs.recvfrom(4096)
             print("Received message: \"%s\"", data)
         except socket.timeout:
             print("Timeout")
+            print("Data: " + str(data))
             return None
 
         message = data.decode('utf-8')
