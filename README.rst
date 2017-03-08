@@ -14,15 +14,15 @@ Installation via pip is not possible yet.
 Usage
 -----
 
-For a basic example have a look at the `example.py <https://github.com/markusressel/xs1-api-client/blob/master/example.py>`_ file.
-If you need more info have a look at the `documentation <http://xs1-api-client.readthedocs.io/>`_ which should help.
+For a basic example have a look at the `example.py <https://github.com/markusressel/raspyrfm-client/blob/master/example.py>`_ file.
+If you need more info have a look at the `documentation <http://raspyrfm-client.readthedocs.io/>`_ which should help.
 
 License
 =======
 
 ::
 
-    xs1-api-client by Markus Ressel
+    raspyrfm-client by Markus Ressel
     Copyright (C) 2017  Markus Ressel
 
     This program is free software: you can redistribute it and/or modify
