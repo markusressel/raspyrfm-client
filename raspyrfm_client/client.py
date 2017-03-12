@@ -24,6 +24,7 @@ from raspyrfm_client.device.manufacturer.REV.Ritter import Ritter
 from raspyrfm_client.device.manufacturer.REV.Telecontrol import Telecontrol
 from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1000NComfort import RCS1000NComfort
 from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1044NComfort import RCS1044NComfort
+from raspyrfm_client.device.manufacturer.elro.AB440D_200W import AB440D_200W
 from raspyrfm_client.device.manufacturer.elro.AB440ID import AB440ID
 from raspyrfm_client.device.manufacturer.elro.AB440L import AB440L
 from raspyrfm_client.device.manufacturer.elro.AB440S import AB440S
@@ -54,6 +55,7 @@ class RaspyRFMClient:
             manufacturer_constants.RCS_1044_N_COMFORT: RCS1044NComfort
         },
         manufacturer_constants.ELRO: {
+            manufacturer_constants.AB440D_200W: AB440D_200W,
             manufacturer_constants.AB440ID: AB440ID,
             manufacturer_constants.AB440L: AB440L,
             manufacturer_constants.AB440S: AB440S,
