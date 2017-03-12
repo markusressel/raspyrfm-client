@@ -15,6 +15,33 @@ print("Manufacturer: " + str(rfm_client.get_manufacturer()))
 print("Model: " + str(rfm_client.get_model()))
 print("Firmware: " + str(rfm_client.get_firmware_version()))
 
+""" Brennenstuhl """
+print("")
+
+brennenstuhl_rcs1000 = rfm_client.get_device(manufacturer_constants.BRENNENSTUHL,
+                                             manufacturer_constants.RCS_1000_N_COMFORT)
+print(
+    brennenstuhl_rcs1000.get_manufacturer() +
+    " " +
+    brennenstuhl_rcs1000.get_model() +
+    ": " +
+    str(brennenstuhl_rcs1000.get_supported_actions()))
+
+brennenstuhl_rcs1000.setup_channel(**{
+    '1': False,
+    '2': False,
+    '3': False,
+    '4': False,
+    '5': False,
+    'A': False,
+    'B': False,
+    'C': False,
+    'D': False,
+    'E': False
+})
+print(brennenstuhl_rcs1000.generate_code(actions.ON))
+print(brennenstuhl_rcs1000.generate_code(actions.OFF))
+
 """ Elro """
 print("")
 elro_ab440s = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
@@ -25,7 +52,18 @@ print(
     ": " +
     str(elro_ab440s.get_supported_actions()))
 
-elro_ab440s.setup_channel(dips=[False, False, False, False, False, False, False, False, False, False])
+elro_ab440s.setup_channel(**{
+    '1': False,
+    '2': False,
+    '3': False,
+    '4': False,
+    '5': False,
+    'A': False,
+    'B': False,
+    'C': False,
+    'D': False,
+    'E': False
+})
 print(elro_ab440s.generate_code(actions.ON))
 print(elro_ab440s.generate_code(actions.OFF))
 
@@ -60,7 +98,18 @@ print(
     ": " +
     str(rev_ritter.get_supported_actions()))
 
-rev_ritter.setup_channel(dips=[False, False, False, False, False, False, False, False, False, False])
+rev_ritter.setup_channel(**{
+    '1': False,
+    '2': False,
+    '3': False,
+    '4': False,
+    '5': False,
+    '6': False,
+    'A': False,
+    'B': False,
+    'C': False,
+    'D': False
+})
 print(rev_ritter.generate_code(actions.ON))
 
 """ Intertechno """
@@ -108,6 +157,17 @@ print(
     ": " +
     str(intertek.get_supported_actions()))
 
-intertek.setup_channel(dips=[False, False, False, False, False, False, False, False, False, False])
+intertek.setup_channel(**{
+    '1': False,
+    '2': False,
+    '3': False,
+    '4': False,
+    '5': False,
+    'A': False,
+    'B': False,
+    'C': False,
+    'D': False,
+    'E': False
+})
 print(intertek.generate_code(actions.ON))
 print(intertek.generate_code(actions.OFF))

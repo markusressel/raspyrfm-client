@@ -19,6 +19,8 @@ from raspyrfm_client.device.manufacturer.Intertechno.PAR1500 import PAR1500
 from raspyrfm_client.device.manufacturer.Intertechno.YCR1000 import YCR1000
 from raspyrfm_client.device.manufacturer.REV.Ritter import Ritter
 from raspyrfm_client.device.manufacturer.REV.Telecontrol import Telecontrol
+from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1044NComfort import RCS1044NComfort
+from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1000NComfort import RCS1000NComfort
 from raspyrfm_client.device.manufacturer.elro.AB440S import AB440S
 
 import socket
@@ -44,6 +46,10 @@ class RaspyRFMClient:
         manufacturer_constants.BAT: {
             manufacturer_constants.RC3500_A_IP44_DE: RC3500_A_IP44_DE,
             manufacturer_constants.RC_AAA1000_A_IP44_Outdoor: RC_AAA1000_A_IP44_Outdoor
+        },
+        manufacturer_constants.BRENNENSTUHL: {
+            manufacturer_constants.RCS_1000_N_COMFORT: RCS1000NComfort,
+            manufacturer_constants.RCS_1044_N_COMFORT: RCS1044NComfort
         },
         manufacturer_constants.ELRO: {
             manufacturer_constants.AB440S: AB440S
