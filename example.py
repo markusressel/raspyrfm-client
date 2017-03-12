@@ -40,6 +40,27 @@ print(brennenstuhl_rcs1000.generate_code(actions.OFF))
 
 """ Elro """
 print("")
+
+elro_ab440id = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440ID)
+
+elro_ab440id.setup_channel(**{
+    '1': False,
+    '2': False,
+    '3': False,
+    '4': False,
+    '5': False,
+    '6': False,
+    '7': False,
+    '8': False
+})
+
+print(str(elro_ab440id))
+
+print(elro_ab440id.generate_code(actions.ON))
+print(elro_ab440id.generate_code(actions.OFF))
+
+
+print("")
 elro_ab440s = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
 
 elro_ab440s.setup_channel(**{

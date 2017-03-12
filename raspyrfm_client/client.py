@@ -3,6 +3,9 @@ TODO:
 
 Example usage can be found in the example.py file
 """
+import socket
+from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
+
 from raspyrfm_client.device.base import Device
 from raspyrfm_client.device.manufacturer import manufacturer_constants
 from raspyrfm_client.device.manufacturer.BAT.RC3500_A_IP44_DE import RC3500_A_IP44_DE
@@ -19,14 +22,13 @@ from raspyrfm_client.device.manufacturer.Intertechno.PAR1500 import PAR1500
 from raspyrfm_client.device.manufacturer.Intertechno.YCR1000 import YCR1000
 from raspyrfm_client.device.manufacturer.REV.Ritter import Ritter
 from raspyrfm_client.device.manufacturer.REV.Telecontrol import Telecontrol
-from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1044NComfort import RCS1044NComfort
 from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1000NComfort import RCS1000NComfort
+from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1044NComfort import RCS1044NComfort
+from raspyrfm_client.device.manufacturer.elro.AB440ID import AB440ID
+from raspyrfm_client.device.manufacturer.elro.AB440L import AB440L
 from raspyrfm_client.device.manufacturer.elro.AB440S import AB440S
-
-import socket
-
-from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST, IPPROTO_UDP, IP_MULTICAST_TTL
-
+from raspyrfm_client.device.manufacturer.elro.AB440SC import AB440SC
+from raspyrfm_client.device.manufacturer.elro.AB440WD import AB440WD
 from raspyrfm_client.device.manufacturer.intertek.Model1919361 import Model1919361
 from raspyrfm_client.device.manufacturer.mumbi.MFS300 import MFS300
 from raspyrfm_client.device.manufacturer.pollin_electronic.Set2605 import Set2605
@@ -52,7 +54,11 @@ class RaspyRFMClient:
             manufacturer_constants.RCS_1044_N_COMFORT: RCS1044NComfort
         },
         manufacturer_constants.ELRO: {
-            manufacturer_constants.AB440S: AB440S
+            manufacturer_constants.AB440ID: AB440ID,
+            manufacturer_constants.AB440L: AB440L,
+            manufacturer_constants.AB440S: AB440S,
+            manufacturer_constants.AB440SC: AB440SC,
+            manufacturer_constants.AB440WD: AB440WD
         },
         manufacturer_constants.INTERTECHNO: {
             manufacturer_constants.CMR_300: CMR300,
