@@ -5,6 +5,8 @@ Example usage can be found in the example.py file
 """
 from raspyrfm_client.device.base import Device
 from raspyrfm_client.device.manufacturer import manufacturer_constants
+from raspyrfm_client.device.manufacturer.BAT.RC3500_A_IP44_DE import RC3500_A_IP44_DE
+from raspyrfm_client.device.manufacturer.BAT.RC_AAA1000_A_IP44_Outdoor import RC_AAA1000_A_IP44_Outdoor
 from raspyrfm_client.device.manufacturer.Intertechno.CMR1000 import CMR1000
 from raspyrfm_client.device.manufacturer.Intertechno.CMR1224 import CMR1224
 from raspyrfm_client.device.manufacturer.Intertechno.CMR300 import CMR300
@@ -39,6 +41,10 @@ class RaspyRFMClient:
     TODO: find implementations dynamically (if possible)
     """
     __manufacturer_model_dict = {
+        manufacturer_constants.BAT: {
+            manufacturer_constants.RC3500_A_IP44_DE: RC3500_A_IP44_DE,
+            manufacturer_constants.RC_AAA1000_A_IP44_Outdoor: RC_AAA1000_A_IP44_Outdoor
+        },
         manufacturer_constants.ELRO: {
             manufacturer_constants.AB440S: AB440S
         },
@@ -109,7 +115,7 @@ class RaspyRFMClient:
             data, address = cs.recvfrom(4096)
             print("Received message: \"%s\"" % data)
             print("Address: " + address[0])
-            
+
             message = data.decode()
 
             # abort if response is invalid
@@ -125,7 +131,7 @@ class RaspyRFMClient:
             self._model = message[message.index('MC:') + 3:message.index(';FW')]
             self._firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
             parsed_host = message[message.index('IP:') + 3:message.index(';;')]
-            
+
             if self._host is None:
                 if parsed_host != address[0]:
                     self._host = address[0]
@@ -133,7 +139,7 @@ class RaspyRFMClient:
                     self._host = parsed_host
 
             return parsed_host
-            
+
         except socket.timeout:
             print("Timeout")
             print("Data: " + str(data))

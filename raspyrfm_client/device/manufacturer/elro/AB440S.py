@@ -21,6 +21,8 @@ class AB440S(Device):
     _head_itgw = "0,0,10,11200,350,26,0,"
     _tail_itgw = _tx433version + _s_speed_itgw + "0"
 
+    _dips = ['1', '2', '3', '4', '5', 'A', 'B', 'C', 'D', 'E']
+
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
         super(AB440S, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
@@ -29,11 +31,9 @@ class AB440S(Device):
         """
         :param channel_arguments: dips=[boolean]
         """
-        if len(channel_arguments) != 1:
-            raise ValueError("Invalid argument size " + str(len(channel_arguments)) + " should be 1")
-
-        if "dips" not in channel_arguments:
-            raise ValueError("arguments should contain key \"dips\"")
+        for dip in self._dips:
+            if dip not in channel_arguments:
+                raise ValueError("arguments should contain key \"" + str(dip) + "\"")
 
         self._channel = channel_arguments
 
@@ -44,7 +44,7 @@ class AB440S(Device):
         return [actions.ON, actions.OFF]
 
     def generate_code(self, action: str) -> str:
-        dips = self.get_channel()["dips"]
+        dips = self.get_channel()
         if dips is None:
             raise ValueError("Missing channel configuration :(")
 
@@ -53,8 +53,9 @@ class AB440S(Device):
 
         seq = ""
 
-        for dip in dips:
-            if dip:
+        for dip in self._dips:
+            dip_is_on = self.get_channel()[dip]
+            if dip_is_on:
                 seq += self._seqLo
             else:
                 seq += self._seqFl

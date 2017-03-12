@@ -2,13 +2,13 @@ from raspyrfm_client.device import actions
 from raspyrfm_client.device.base import Device
 
 
-class Set2605(Device):
+class RC3500_A_IP44_DE(Device):
     _lo = "1,"
     _hi = "3,"
     _seqLo = _lo + _hi + _lo + _hi
     _seqHi = _hi + _lo + _hi + _lo
     _seqFl = _lo + _hi + _hi + _lo
-    _on = _seqFl + _seqFl
+    _on = _seqLo + _seqFl
     _off = _seqFl + _seqLo
 
     _tx433version = "1,"
@@ -17,7 +17,7 @@ class Set2605(Device):
     _head_connair = "TXP:0,0,10,5600,350,25,"
     _tail_connair = _tx433version + _s_speed_connair + ";"
 
-    _s_speed_itgw = "32,"
+    _s_speed_itgw = "125,"
     _head_itgw = "0,0,10,11200,350,26,0,"
     _tail_itgw = _tx433version + _s_speed_itgw + "0"
 
@@ -25,11 +25,11 @@ class Set2605(Device):
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(Set2605, self).__init__(manufacturer_constants.POLLIN_ELECTRONIC, manufacturer_constants.SET_2605)
+        super(RC3500_A_IP44_DE, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.RC3500_A_IP44_DE)
 
     def setup_channel(self, **channel_arguments) -> None:
         """
-        :param channel_arguments: dips=[boolean]
+        :param channel_arguments: 1=False, 2=False, ... , 5=False, A=True, B=False, ... , E=False
         """
         for dip in self._dips:
             if dip not in channel_arguments:

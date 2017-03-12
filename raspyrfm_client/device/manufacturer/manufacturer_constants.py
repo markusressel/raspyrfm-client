@@ -1,3 +1,9 @@
+BAT = "BAT"
+
+RC3500_A_IP44_DE = "RC3500-A IP44 DE"
+RC_AAA1000_A_IP44_Outdoor = "RC AAA1000-A IP44 Outdoor"
+
+
 ELRO = "Elro"
 
 AB440S = "AB440S"
