@@ -9,6 +9,12 @@ class Device:
         self._model = model
         self._channel = None
 
+    def __str__(self):
+        return ("Manufacturer: " + self._manufacturer + "\n" +
+                "Model: " + self._model + "\n" +
+                "Supported Actions: " + str(self.get_supported_actions()) + "\n" +
+                "Channel: " + str(self.get_channel()))
+
     def get_manufacturer(self) -> str:
         """
         :return: the device manufacturer
