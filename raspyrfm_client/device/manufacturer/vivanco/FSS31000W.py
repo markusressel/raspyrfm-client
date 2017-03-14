@@ -2,7 +2,7 @@ from raspyrfm_client.device import actions
 from raspyrfm_client.device.base import Device
 
 
-class AB440S(Device):
+class FSS31000W(Device):
     _lo = "1,"
     _hi = "3,"
     _seqLo = _lo + _hi + _lo + _hi
@@ -25,11 +25,11 @@ class AB440S(Device):
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(AB440S, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
+        super(FSS31000W, self).__init__(manufacturer_constants.VIVANCO, manufacturer_constants.FSS31000W)
 
     def set_channel_config(self, **channel_arguments) -> None:
         """
-        :param channel_arguments: dips=[boolean]
+        :param channel_arguments: 1=False, 2=False, ... , 5=False, A=True, B=False, ... , E=False
         """
         for dip in self._dips:
             if dip not in channel_arguments:

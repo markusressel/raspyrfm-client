@@ -27,7 +27,7 @@ class HX2262Compatible(Device):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
         super(HX2262Compatible, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
 
-    def setup_channel(self, **channel_arguments) -> None:
+    def set_channel_config(self, **channel_arguments) -> None:
         """
         :param channel_arguments: dips=[boolean]
         """
@@ -37,14 +37,11 @@ class HX2262Compatible(Device):
 
         self._channel = channel_arguments
 
-    def get_channel(self) -> dict:
-        return self._channel
-
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
 
     def generate_code(self, action: str) -> str:
-        dips = self.get_channel()
+        dips = self.get_channel_config()
         if dips is None:
             raise ValueError("Missing channel configuration :(")
 
@@ -54,7 +51,7 @@ class HX2262Compatible(Device):
         seq = ""
 
         for dip in self._dips:
-            dip_value = str(self.get_channel()[dip]).lower()
+            dip_value = str(self.get_channel_config()[dip]).lower()
             if dip_value.lower() is 'f':
                 seq += self._seqFl
             elif dip_value.lower() is '0':

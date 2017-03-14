@@ -66,7 +66,7 @@ class CMR1000(Device):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
         super(CMR1000, self).__init__(manufacturer_constants.INTERTECHNO, manufacturer_constants.CMR_1000)
 
-    def setup_channel(self, **channel_arguments) -> None:
+    def set_channel_config(self, **channel_arguments) -> None:
         """
         :param channel_arguments: master='A', slave=1
         """
@@ -82,17 +82,17 @@ class CMR1000(Device):
         return [actions.ON, actions.OFF]
 
     def generate_code(self, action: str) -> str:
-        if self.get_channel() is None:
+        if self.get_channel_config() is None:
             raise ValueError("Missing channel configuration :(")
 
         if action not in self.get_supported_actions():
             raise ValueError("Unsupported action: " + action)
 
         if action is actions.ON:
-            return self._head_connair + self._master_dict[self.get_channel()["master"]] + self._slave_dict[
-                self.get_channel()["slave"]] + self._additional + self._on + self._tail_connair
+            return self._head_connair + self._master_dict[self.get_channel_config()["master"]] + self._slave_dict[
+                self.get_channel_config()["slave"]] + self._additional + self._on + self._tail_connair
         elif action is actions.OFF:
-            return self._head_connair + self._master_dict[self.get_channel()["master"]] + self._slave_dict[
-                self.get_channel()["slave"]] + self._additional + self._off + self._tail_connair
+            return self._head_connair + self._master_dict[self.get_channel_config()["master"]] + self._slave_dict[
+                self.get_channel_config()["slave"]] + self._additional + self._off + self._tail_connair
         else:
             raise ValueError("Invalid action")

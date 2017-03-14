@@ -27,7 +27,7 @@ class Set2605(Device):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
         super(Set2605, self).__init__(manufacturer_constants.POLLIN_ELECTRONIC, manufacturer_constants.SET_2605)
 
-    def setup_channel(self, **channel_arguments) -> None:
+    def set_channel_config(self, **channel_arguments) -> None:
         """
         :param channel_arguments: dips=[boolean]
         """
@@ -37,14 +37,11 @@ class Set2605(Device):
 
         self._channel = channel_arguments
 
-    def get_channel(self) -> dict:
-        return self._channel
-
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
 
     def generate_code(self, action: str) -> str:
-        dips = self.get_channel()
+        dips = self.get_channel_config()
         if dips is None:
             raise ValueError("Missing channel configuration :(")
 
@@ -54,7 +51,7 @@ class Set2605(Device):
         seq = ""
 
         for dip in self._dips:
-            dip_is_on = self.get_channel()[dip]
+            dip_is_on = self.get_channel_config()[dip]
             if dip_is_on:
                 seq += self._seqLo
             else:

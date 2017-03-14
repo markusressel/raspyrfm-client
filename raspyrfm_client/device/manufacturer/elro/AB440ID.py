@@ -13,7 +13,7 @@ class AB440ID(AB440S):
                                      manufacturer_constants.AB440ID)
 
     def generate_code(self, action: str) -> str:
-        dips = self.get_channel()
+        dips = self.get_channel_config()
         if dips is None:
             raise ValueError("Missing channel configuration :(")
 
@@ -26,7 +26,7 @@ class AB440ID(AB440S):
             if i < 5:
                 continue
             else:
-                dip_is_on = self.get_channel()[dip]
+                dip_is_on = self.get_channel_config()[dip]
                 if dip_is_on:
                     seq += self._seqLo
                 else:
@@ -39,7 +39,7 @@ class AB440ID(AB440S):
             if i >= 5:
                 break
             else:
-                dip_is_on = self.get_channel()[dip]
+                dip_is_on = self.get_channel_config()[dip]
                 if dip_is_on:
                     seq += self._seqLo
                 else:

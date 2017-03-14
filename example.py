@@ -20,7 +20,7 @@ print("")
 
 brennenstuhl_rcs1000 = rfm_client.get_device(manufacturer_constants.BRENNENSTUHL,
                                              manufacturer_constants.RCS_1000_N_COMFORT)
-brennenstuhl_rcs1000.setup_channel(**{
+brennenstuhl_rcs1000.set_channel_config(**{
     '1': False,
     '2': False,
     '3': False,
@@ -43,7 +43,7 @@ print("")
 
 elro_ab440id = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440ID)
 
-elro_ab440id.setup_channel(**{
+elro_ab440id.set_channel_config(**{
     '1': False,
     '2': False,
     '3': False,
@@ -63,7 +63,7 @@ print(elro_ab440id.generate_code(actions.OFF))
 print("")
 elro_ab440s = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
 
-elro_ab440s.setup_channel(**{
+elro_ab440s.set_channel_config(**{
     '1': False,
     '2': False,
     '3': False,
@@ -86,7 +86,7 @@ print("")
 
 rev_telecontrol = rfm_client.get_device(manufacturer_constants.REV, manufacturer_constants.Telecontrol)
 
-rev_telecontrol.setup_channel(master='A', slave=1)
+rev_telecontrol.set_channel_config(master='A', slave=1)
 
 print(str(rev_telecontrol))
 
@@ -99,7 +99,7 @@ print("")
 
 rev_ritter = rfm_client.get_device(manufacturer_constants.REV, manufacturer_constants.Ritter)
 
-rev_ritter.setup_channel(**{
+rev_ritter.set_channel_config(**{
     '1': False,
     '2': False,
     '3': False,
@@ -121,14 +121,14 @@ print("")
 
 intertechno_cmr_1000 = rfm_client.get_device(manufacturer_constants.INTERTECHNO, manufacturer_constants.CMR_1000)
 
-intertechno_cmr_1000.setup_channel(master='A', slave=1)
+intertechno_cmr_1000.set_channel_config(master='A', slave=1)
 
 print(str(intertechno_cmr_1000))
 
 print(intertechno_cmr_1000.generate_code(actions.ON))
 print(intertechno_cmr_1000.generate_code(actions.OFF))
 
-intertechno_cmr_1000.setup_channel(master='P', slave=16)
+intertechno_cmr_1000.set_channel_config(master='P', slave=16)
 print(intertechno_cmr_1000.generate_code(actions.ON))
 print(intertechno_cmr_1000.generate_code(actions.OFF))
 
@@ -136,7 +136,7 @@ print("")
 
 intertechno_cmr_500 = rfm_client.get_device(manufacturer_constants.INTERTECHNO, manufacturer_constants.CMR_500)
 
-intertechno_cmr_500.setup_channel(master='A', slave=1)
+intertechno_cmr_500.set_channel_config(master='A', slave=1)
 
 print(str(intertechno_cmr_500))
 
@@ -147,7 +147,7 @@ print(intertechno_cmr_500.generate_code(actions.OFF))
 print("")
 intertek = rfm_client.get_device(manufacturer_constants.INTERTEK, manufacturer_constants.MODEL_1919361)
 
-intertek.setup_channel(**{
+intertek.set_channel_config(**{
     '1': False,
     '2': False,
     '3': False,
