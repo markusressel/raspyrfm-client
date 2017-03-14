@@ -81,7 +81,7 @@ print(str(elro_ab440s))
 print(elro_ab440s.generate_code(actions.ON))
 print(elro_ab440s.generate_code(actions.OFF))
 
-""" REV """
+""" rev """
 print("")
 
 rev_telecontrol = rfm_client.get_device(manufacturer_constants.REV, manufacturer_constants.Telecontrol)
@@ -116,7 +116,7 @@ print(str(rev_ritter))
 
 print(rev_ritter.generate_code(actions.ON))
 
-""" Intertechno """
+""" intertechno """
 print("")
 
 intertechno_cmr_1000 = rfm_client.get_device(manufacturer_constants.INTERTECHNO, manufacturer_constants.CMR_1000)

@@ -1,4 +1,4 @@
-BAT = "BAT"
+BAT = "bat"
 
 RC3500_A_IP44_DE = "RC3500-A IP44 DE"
 RC_AAA1000_A_IP44_Outdoor = "RC AAA1000-A IP44 Outdoor"
@@ -19,7 +19,7 @@ AB440S = "AB440S"
 AB440SC = "AB440SC"
 AB440WD = "AB440WD"
 
-INTERTECHNO = "Intertechno"
+INTERTECHNO = "intertechno"
 
 CMR_300 = "CMR 300"
 CMR_500 = "CMR 500"
@@ -43,7 +43,7 @@ M_FS300 = "m-FS300"
 POLLIN_ELECTRONIC = "Pollin Electronic"
 SET_2605 = "Set 2605"
 
-REV = "REV"
+REV = "rev"
 
 Telecontrol = "Telecontrol"
 Ritter = "Ritter"

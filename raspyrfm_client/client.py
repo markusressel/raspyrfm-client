@@ -8,20 +8,8 @@ from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
 
 from raspyrfm_client.device.base import Device
 from raspyrfm_client.device.manufacturer import manufacturer_constants
-from raspyrfm_client.device.manufacturer.BAT.RC3500_A_IP44_DE import RC3500_A_IP44_DE
-from raspyrfm_client.device.manufacturer.BAT.RC_AAA1000_A_IP44_Outdoor import RC_AAA1000_A_IP44_Outdoor
-from raspyrfm_client.device.manufacturer.Intertechno.CMR1000 import CMR1000
-from raspyrfm_client.device.manufacturer.Intertechno.CMR1224 import CMR1224
-from raspyrfm_client.device.manufacturer.Intertechno.CMR300 import CMR300
-from raspyrfm_client.device.manufacturer.Intertechno.CMR500 import CMR500
-from raspyrfm_client.device.manufacturer.Intertechno.GRR300 import GRR300
-from raspyrfm_client.device.manufacturer.Intertechno.ITR300 import ITR300
-from raspyrfm_client.device.manufacturer.Intertechno.ITR3500 import ITR3500
-from raspyrfm_client.device.manufacturer.Intertechno.PA31000 import PA31000
-from raspyrfm_client.device.manufacturer.Intertechno.PAR1500 import PAR1500
-from raspyrfm_client.device.manufacturer.Intertechno.YCR1000 import YCR1000
-from raspyrfm_client.device.manufacturer.REV.Ritter import Ritter
-from raspyrfm_client.device.manufacturer.REV.Telecontrol import Telecontrol
+from raspyrfm_client.device.manufacturer.bat.RC3500_A_IP44_DE import RC3500_A_IP44_DE
+from raspyrfm_client.device.manufacturer.bat.RC_AAA1000_A_IP44_Outdoor import RC_AAA1000_A_IP44_Outdoor
 from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1000NComfort import RCS1000NComfort
 from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1044NComfort import RCS1044NComfort
 from raspyrfm_client.device.manufacturer.elro.AB440D_200W import AB440D_200W
@@ -31,9 +19,21 @@ from raspyrfm_client.device.manufacturer.elro.AB440L import AB440L
 from raspyrfm_client.device.manufacturer.elro.AB440S import AB440S
 from raspyrfm_client.device.manufacturer.elro.AB440SC import AB440SC
 from raspyrfm_client.device.manufacturer.elro.AB440WD import AB440WD
+from raspyrfm_client.device.manufacturer.intertechno.CMR1000 import CMR1000
+from raspyrfm_client.device.manufacturer.intertechno.CMR1224 import CMR1224
+from raspyrfm_client.device.manufacturer.intertechno.CMR300 import CMR300
+from raspyrfm_client.device.manufacturer.intertechno.CMR500 import CMR500
+from raspyrfm_client.device.manufacturer.intertechno.GRR300 import GRR300
+from raspyrfm_client.device.manufacturer.intertechno.ITR300 import ITR300
+from raspyrfm_client.device.manufacturer.intertechno.ITR3500 import ITR3500
+from raspyrfm_client.device.manufacturer.intertechno.PA31000 import PA31000
+from raspyrfm_client.device.manufacturer.intertechno.PAR1500 import PAR1500
+from raspyrfm_client.device.manufacturer.intertechno.YCR1000 import YCR1000
 from raspyrfm_client.device.manufacturer.intertek.Model1919361 import Model1919361
 from raspyrfm_client.device.manufacturer.mumbi.MFS300 import MFS300
 from raspyrfm_client.device.manufacturer.pollin_electronic.Set2605 import Set2605
+from raspyrfm_client.device.manufacturer.rev.Ritter import Ritter
+from raspyrfm_client.device.manufacturer.rev.Telecontrol import Telecontrol
 
 
 class RaspyRFMClient:

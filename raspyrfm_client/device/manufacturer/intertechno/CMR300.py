@@ -1,4 +1,4 @@
-from raspyrfm_client.device.manufacturer.Intertechno.CMR1000 import CMR1000
+from raspyrfm_client.device.manufacturer.intertechno.CMR1000 import CMR1000
 
 
 class CMR300(CMR1000):

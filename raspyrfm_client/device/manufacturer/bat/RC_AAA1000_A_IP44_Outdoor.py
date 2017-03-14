@@ -1,4 +1,4 @@
-from raspyrfm_client.device.manufacturer.BAT.RC3500_A_IP44_DE import RC3500_A_IP44_DE
+from raspyrfm_client.device.manufacturer.bat.RC3500_A_IP44_DE import RC3500_A_IP44_DE
 
 
 class RC_AAA1000_A_IP44_Outdoor(RC3500_A_IP44_DE):
