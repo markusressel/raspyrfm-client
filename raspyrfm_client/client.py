@@ -149,8 +149,6 @@ class RaspyRFMClient:
             return parsed_host
 
         except socket.timeout:
-            print("Timeout")
-            print("Data: " + str(data))
             return None
 
     def get_manufacturer(self) -> str:

@@ -25,7 +25,7 @@ class HX2262Compatible(Device):
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(HX2262Compatible, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
+        super(HX2262Compatible, self).__init__(manufacturer_constants.UNIVERSAL, manufacturer_constants.HX2262)
 
     def set_channel_config(self, **channel_arguments) -> None:
         """

@@ -48,6 +48,10 @@ REV = "REV"
 Telecontrol = "Telecontrol"
 Ritter = "Ritter"
 
+UNIVERSAL = "Universal"
+
+HX2262 = "HX2262"
+
 VIVANCO = "Vivanco"
 
 FSS31000W = "FSS31000W"
