@@ -16,7 +16,7 @@ class RaspyRFMClient:
     This dictionary maps manufacturer and model constants to their implementation class.
     It is filled automatically when creating an instance of this class.
     """
-    DEVICE_IMPLEMENTATIONS_DICT = {}
+    _DEVICE_IMPLEMENTATIONS_DICT = {}
 
     _broadcast_message = b'SEARCH HCGW'
 
@@ -35,18 +35,16 @@ class RaspyRFMClient:
         self._model = None
         self._firmware_version = None
 
-        RaspyRFMClient.reload_device_implementations()
+        self.reload_device_implementations()
 
-    @staticmethod
-    def reload_device_implementations() -> None:
+    def reload_device_implementations(self) -> None:
         """
         Finds device implementations in the "raspyrfm_client.device.manufacturer" package.
         This works by recursively searching through supbackages and finding classes that have
         the device base class (base.py) as a superclass.
         """
 
-        global DEVICE_IMPLEMENTATIONS_DICT
-        DEVICE_IMPLEMENTATIONS_DICT = {}
+        self._DEVICE_IMPLEMENTATIONS_DICT = {}
 
         print("Loading implementation classes...")
 
@@ -94,10 +92,10 @@ class RaspyRFMClient:
             brand = device_instance.get_manufacturer()
             model = device_instance.get_model()
 
-            if brand not in DEVICE_IMPLEMENTATIONS_DICT:
-                DEVICE_IMPLEMENTATIONS_DICT[brand] = {}
+            if brand not in self._DEVICE_IMPLEMENTATIONS_DICT:
+                self._DEVICE_IMPLEMENTATIONS_DICT[brand] = {}
 
-            DEVICE_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
+                self._DEVICE_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
 
     def search(self) -> str or None:
         """
@@ -179,15 +177,35 @@ class RaspyRFMClient:
         """
         return self._firmware_version
 
-    @staticmethod
-    def get_device(manufacturer: str, model: str) -> Device:
-        return DEVICE_IMPLEMENTATIONS_DICT[manufacturer][model]()
+    def get_device(self, manufacturer: str, model: str) -> Device:
+        """
+        Use this method to get a device implementation intance
+        :param manufacturer: device manufacturer name
+        :param model: device model name
+        :return: device implementation
+        """
+        return self._DEVICE_IMPLEMENTATIONS_DICT[manufacturer][model]()
 
-    @staticmethod
-    def list_supported_devices():
-        for manufacturer in DEVICE_IMPLEMENTATIONS_DICT:
+    def get_supported_manufacturers(self) -> [str]:
+        """
+        :return: a list of supported manufacturer names
+        """
+        return self._DEVICE_IMPLEMENTATIONS_DICT.keys()
+
+    def get_supported_models(self, manufacturer: str) -> [str]:
+        """
+        :param manufacturer: supported manufacturer name
+        :return: a list of supported model names for this manufacturer
+        """
+        return self._DEVICE_IMPLEMENTATIONS_DICT[manufacturer].keys()
+
+    def list_supported_devices(self) -> None:
+        """
+        Prints an indented list of all supported manufacturers and models
+        """
+        for manufacturer in self._DEVICE_IMPLEMENTATIONS_DICT:
             print(manufacturer)
-            for model in DEVICE_IMPLEMENTATIONS_DICT[manufacturer].keys():
+            for model in self._DEVICE_IMPLEMENTATIONS_DICT[manufacturer].keys():
                 print("  " + model)
 
     def send(self, device: Device, action: str) -> None:
