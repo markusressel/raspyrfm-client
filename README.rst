@@ -1,7 +1,7 @@
 raspyrfm-client
 ==============
 
-A python library for accessing actuator and sensor data on the the EZcontrol® XS1 Gateway using their HTTP API.
+A python library that allows the generation of network codes for the RaspyRFM rc module.
 
 How to use
 ==========
@@ -91,28 +91,29 @@ which will give you an indented list of supported manufacturers and their suppor
      Model 1919361
    [...]
 
-**Use the names in this list (or better yet: :code:`manufacturer_constants.py` constants) to get a device in the next step.**
+**Use the names in this list (or better yet** :code:`manufacturer_constants.py`
+**constants) to get a device in the next step.**
 
-To generate codes for a device **you first have to get an instance of its implementation**. Use the following method to get just that:
+To generate codes for a device **you first have to get an instance of its implementation** like this:
 
 .. code-block:: python
 
    brennenstuhl_rcs1000 = rfm_client.get_device(manufacturer_constants.BRENNENSTUHL,
                                              manufacturer_constants.RCS_1000_N_COMFORT)
 
-It is always a good choice to **only use values present in :code:`manufacturer_constants`** but if needed this can also be a :code:`string`. These should always be the same values as the ones printed by the :code:`list_supported_devices()` method.
+It is always a good idea to **only use values present in** :code:`manufacturer_constants` but if needed you can also pass in a :code:`string`. These however need to always be the same values as the ones printed by the :code:`list_supported_devices()` method.
 
 Generate action codes
 ^^^^^^^^^^^^^^^^^^^^^
 Now that you have an implementation instance you can generate codes for supported actions by using an :code:`actions` constant that you imported previously.
 
-To get a list of supported actions call:
+To get a list of supported actions for a device call:
 
 .. code-block:: python
 
    brennenstuhl_rcs1000.get_supported_actions()
 
-and generate a code with:
+and generate a code for one of them with:
 
 .. code-block:: python
 
@@ -126,9 +127,80 @@ To send a code for your device of choice you can combine the two objects in this
 
    rfm_client.send(brennenstuhl_rcs1000, actions.ON)
 
+Note that this will only work if you specified an :code:`IP` manually or the :code:`search()` method has found your :code:`RaspyRFM` module.
+
 Custom implementations
 ======================
 
+The :code:`raspyrfm-client` library is designed so you can implement custom devices in a (hopefully) very easy way.
+
+File Structure
+--------------
+All device implementations are located in the :code:`/device/manufacturers/` module and implement the base class :code:`Device` that can be found in :code:`/device/base.py`.
+
+Create a new Device
+-------------------
+To create a new device implementation for a new manufacturer and model create a new subdirectory for your manufacturer and a python file for your model:
+
+.. code-block::
+
+    ───raspyrfm_client
+    │   │   client.py
+    │   │
+    │   └───device
+    │       │   actions.py
+    │       │   base.py
+    │       │
+    │       └───manufacturer
+    │           │   manufacturer_constants.py
+    │           │
+    │           ├───intertek
+    │           │       Model1919361.py
+    │           │
+    │           ├───rev
+    │           │       Ritter.py
+    │           │       Telecontrol.py
+    │           │
+    │           ├───universal
+    │           │       HX2262Compatible.py
+    │           │
+    │           └───yourmanufacturer
+    │                   yourmodel.py
+    ──────────────────────────────────────────
+
+Implement a Device
+------------------
+
+Now the basic implementation of your device looks like this:
+
+.. code-block:: python
+
+    from raspyrfm_client.device import actions
+    from raspyrfm_client.device.base import Device
+
+
+    class YourModel(Device):
+
+        def __init__(self):
+            from raspyrfm_client.device.manufacturer import manufacturer_constants
+            super(YourModel, self).__init__(manufacturer_constants.YOUR_MANUFACTURER, manufacturer_constants.YOUR_MODEL)
+
+
+        def set_channel_config(self, **channel_arguments) -> None:
+            pass
+
+        def get_supported_actions(self) -> [str]:
+            return [actions.ON]
+
+        def generate_code(self, action: str) -> str:
+            pass
+
+Most importantly you have to call the :code:`super().__init__` method like shown. This will ensure that your implementation is found by the :code:`RaspyRFMClient` and you can get an instance of your device using :code:`rfm_client.get_device()` as shown before.
+
+You also have to implement abstract methods from the Device class. Have a look at its documentation to get a sense of what they are all about.
+
+After you have implemented all those methods you are good to go!
+Just call :code:`rfm_client.reload_device_implementations()` and :code:`rfm_client.list_supported_devices()` to check if your implementation is listed.
 
 
 License
@@ -136,7 +208,7 @@ License
 
 ::
 
-    raspyrfm- by Markus Ressel
+    raspyrfm-client by Markus Ressel
     Copyright (C) 2017  Markus Ressel
 
     This program is free software: you can redistribute it and/or modify
