@@ -21,15 +21,15 @@ print("")
 brennenstuhl_rcs1000 = rfm_client.get_device(manufacturer_constants.BRENNENSTUHL,
                                              manufacturer_constants.RCS_1000_N_COMFORT)
 brennenstuhl_rcs1000.set_channel_config(**{
-    '1': False,
-    '2': False,
-    '3': False,
-    '4': False,
-    '5': False,
+    '1': True,
+    '2': True,
+    '3': True,
+    '4': True,
+    '5': True,
     'A': False,
     'B': False,
     'C': False,
-    'D': False,
+    'D': True,
     'E': False
 })
 
@@ -37,6 +37,7 @@ print(str(brennenstuhl_rcs1000))
 
 print(brennenstuhl_rcs1000.generate_code(actions.ON))
 print(brennenstuhl_rcs1000.generate_code(actions.OFF))
+rfm_client.send(brennenstuhl_rcs1000, actions.ON)
 
 """ Elro """
 print("")
