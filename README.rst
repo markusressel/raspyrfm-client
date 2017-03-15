@@ -103,6 +103,46 @@ To generate codes for a device **you first have to get an instance of its implem
 
 It is always a good idea to **only use values present in** :code:`manufacturer_constants` but if needed you can also pass in a :code:`string`. These however need to always be the same values as the ones printed by the :code:`list_supported_devices()` method.
 
+Channel configuration
+^^^^^^^^^^^^^^^^^^^^^
+Before you can generate codes with your shiny new device implementation you have to specify a channel configuration. These **configurations can be very different for every device**. The best way to know the correct way of specifying the channel configuration for a specific device is to look at the source code (yes I know...) or by trial and error (even worse). A good device implementation should tell you how the device configuration should look like when specifying it wrong.
+
+However all configurations are a **keyed dictionary**.
+So in general there are two ways of passing the channel configuration argument.
+One (inline):
+
+.. code-block:: python
+
+    device.set_channel_config(value1=1, value2=2)
+
+Two (as a dictionary):
+
+.. code-block:: python
+
+    device.set_channel_config(**{
+        'value1': 1,
+        'value2': 2
+    })
+
+**Note** that the **keys always need to be a** :code:`string`.
+
+For our brennenstuhl device it would look like this:
+
+.. code-block:: python
+
+    brennenstuhl_rcs1000.set_channel_config(**{
+        '1': True,
+        '2': True,
+        '3': True,
+        '4': True,
+        '5': True,
+        'A': True,
+        'B': False,
+        'C': False,
+        'D': False,
+        'E': False
+    })
+
 Generate action codes
 ^^^^^^^^^^^^^^^^^^^^^
 Now that you have an implementation instance you can generate codes for supported actions by using an :code:`actions` constant that you imported previously.
@@ -197,10 +237,14 @@ Now the basic implementation of your device looks like this:
 
 Most importantly you have to call the :code:`super().__init__` method like shown. This will ensure that your implementation is found by the :code:`RaspyRFMClient` and you can get an instance of your device using :code:`rfm_client.get_device()` as shown before.
 
-You also have to implement abstract methods from the Device class. Have a look at its documentation to get a sense of what they are all about.
+If your manufacturer does not exist yet **create a new constant** in the :code:`manufacturer_constants.py` file and use its value in your :code:`__init__`.
+**Do the same thing for your model name.**
 
-After you have implemented all those methods you are good to go!
+You also have to implement all abstract methods from the :code:`Device` class. Have a look at its documentation to get a sense of what those methods are all about.
+
+After you have implemented all methods you are good to go!
 Just call :code:`rfm_client.reload_device_implementations()` and :code:`rfm_client.list_supported_devices()` to check if your implementation is listed.
+If everything looks good you can use your implementation like any other one.
 
 
 License
