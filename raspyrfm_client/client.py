@@ -1,7 +1,5 @@
 """
-TODO:
-
-Example usage can be found in the example.py file
+Example usage of the RaspyRFMClient can be found in the example.py file
 """
 import socket
 from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
@@ -42,8 +40,9 @@ class RaspyRFMClient:
     @staticmethod
     def reload_device_implementations() -> None:
         """
-        Finds device implementations in the "device" package.
-        This works by searching for classes that have the device base class as a superclass
+        Finds device implementations in the "raspyrfm_client.device.manufacturer" package.
+        This works by recursively searching through supbackages and finding classes that have
+        the device base class (base.py) as a superclass.
         """
 
         global DEVICE_IMPLEMENTATIONS_DICT
@@ -100,7 +99,7 @@ class RaspyRFMClient:
 
             DEVICE_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
 
-    def search(self) -> str:
+    def search(self) -> str or None:
         """
         Sends a local network broadcast with a specified message.
         If a gateway is present it will respond to this broadcast.
@@ -118,7 +117,6 @@ class RaspyRFMClient:
         cs.setblocking(True)
         cs.settimeout(1)
 
-        data = None
         try:
             data, address = cs.recvfrom(4096)
             print("Received message: \"%s\"" % data)
@@ -191,9 +189,6 @@ class RaspyRFMClient:
             print(manufacturer)
             for model in DEVICE_IMPLEMENTATIONS_DICT[manufacturer].keys():
                 print("  " + model)
-
-                # import pprint
-                # pprint.pprint(DEVICE_IMPLEMENTATIONS_DICT)
 
     def send(self, device: Device, action: str) -> None:
         """

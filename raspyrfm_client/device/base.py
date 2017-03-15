@@ -36,7 +36,7 @@ class Device(object):
         """
         raise NotImplementedError
 
-    def get_channel_config(self) -> dict:
+    def get_channel_config(self) -> dict or None:
         """
         :return: the channel setup as a dict
         """
