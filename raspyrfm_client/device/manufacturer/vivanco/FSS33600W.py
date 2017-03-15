@@ -1,4 +1,4 @@
-from raspyrfm_client.device.manufacturer.vivanco import FSS31000W
+from raspyrfm_client.device.manufacturer.vivanco.FSS31000W import FSS31000W
 
 
 class FSS33600W(FSS31000W):

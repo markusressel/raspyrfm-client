@@ -3,7 +3,7 @@ Base class for all device implementations
 """
 
 
-class Device:
+class Device(object):
     def __init__(self, manufacturer: str, model: str):
         self._manufacturer = manufacturer
         self._model = model

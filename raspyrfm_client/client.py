@@ -7,33 +7,6 @@ import socket
 from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
 
 from raspyrfm_client.device.base import Device
-from raspyrfm_client.device.manufacturer import manufacturer_constants
-from raspyrfm_client.device.manufacturer.bat.RC3500_A_IP44_DE import RC3500_A_IP44_DE
-from raspyrfm_client.device.manufacturer.bat.RC_AAA1000_A_IP44_Outdoor import RC_AAA1000_A_IP44_Outdoor
-from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1000NComfort import RCS1000NComfort
-from raspyrfm_client.device.manufacturer.brennenstuhl.RCS1044NComfort import RCS1044NComfort
-from raspyrfm_client.device.manufacturer.elro.AB440D_200W import AB440D_200W
-from raspyrfm_client.device.manufacturer.elro.AB440D_300W import AB440D_300W
-from raspyrfm_client.device.manufacturer.elro.AB440ID import AB440ID
-from raspyrfm_client.device.manufacturer.elro.AB440L import AB440L
-from raspyrfm_client.device.manufacturer.elro.AB440S import AB440S
-from raspyrfm_client.device.manufacturer.elro.AB440SC import AB440SC
-from raspyrfm_client.device.manufacturer.elro.AB440WD import AB440WD
-from raspyrfm_client.device.manufacturer.intertechno.CMR1000 import CMR1000
-from raspyrfm_client.device.manufacturer.intertechno.CMR1224 import CMR1224
-from raspyrfm_client.device.manufacturer.intertechno.CMR300 import CMR300
-from raspyrfm_client.device.manufacturer.intertechno.CMR500 import CMR500
-from raspyrfm_client.device.manufacturer.intertechno.GRR300 import GRR300
-from raspyrfm_client.device.manufacturer.intertechno.ITR300 import ITR300
-from raspyrfm_client.device.manufacturer.intertechno.ITR3500 import ITR3500
-from raspyrfm_client.device.manufacturer.intertechno.PA31000 import PA31000
-from raspyrfm_client.device.manufacturer.intertechno.PAR1500 import PAR1500
-from raspyrfm_client.device.manufacturer.intertechno.YCR1000 import YCR1000
-from raspyrfm_client.device.manufacturer.intertek.Model1919361 import Model1919361
-from raspyrfm_client.device.manufacturer.mumbi.MFS300 import MFS300
-from raspyrfm_client.device.manufacturer.pollin_electronic.Set2605 import Set2605
-from raspyrfm_client.device.manufacturer.rev.Ritter import Ritter
-from raspyrfm_client.device.manufacturer.rev.Telecontrol import Telecontrol
 
 
 class RaspyRFMClient:
@@ -42,54 +15,10 @@ class RaspyRFMClient:
     """
 
     """
-    This dictionary maps manufacturer and model constants to their implementation class
-
-    TODO: find implementations dynamically (if possible)
+    This dictionary maps manufacturer and model constants to their implementation class.
+    It is filled automatically when creating an instance of this class.
     """
-    __manufacturer_model_dict = {
-        manufacturer_constants.BAT: {
-            manufacturer_constants.RC3500_A_IP44_DE: RC3500_A_IP44_DE,
-            manufacturer_constants.RC_AAA1000_A_IP44_Outdoor: RC_AAA1000_A_IP44_Outdoor
-        },
-        manufacturer_constants.BRENNENSTUHL: {
-            manufacturer_constants.RCS_1000_N_COMFORT: RCS1000NComfort,
-            manufacturer_constants.RCS_1044_N_COMFORT: RCS1044NComfort
-        },
-        manufacturer_constants.ELRO: {
-            manufacturer_constants.AB440D_200W: AB440D_200W,
-            manufacturer_constants.AB440D_300W: AB440D_300W,
-            manufacturer_constants.AB440ID: AB440ID,
-            manufacturer_constants.AB440L: AB440L,
-            manufacturer_constants.AB440S: AB440S,
-            manufacturer_constants.AB440SC: AB440SC,
-            manufacturer_constants.AB440WD: AB440WD
-        },
-        manufacturer_constants.INTERTECHNO: {
-            manufacturer_constants.CMR_300: CMR300,
-            manufacturer_constants.CMR_500: CMR500,
-            manufacturer_constants.CMR_1000: CMR1000,
-            manufacturer_constants.CMR_1224: CMR1224,
-            manufacturer_constants.GRR_300: GRR300,
-            manufacturer_constants.ITR_300: ITR300,
-            manufacturer_constants.ITR_3500: ITR3500,
-            manufacturer_constants.PA3_1000: PA31000,
-            manufacturer_constants.PAR_1500: PAR1500,
-            manufacturer_constants.YCR_1000: YCR1000
-        },
-        manufacturer_constants.INTERTEK: {
-            manufacturer_constants.MODEL_1919361: Model1919361
-        },
-        manufacturer_constants.MUMBI: {
-            manufacturer_constants.M_FS300: MFS300
-        },
-        manufacturer_constants.POLLIN_ELECTRONIC: {
-            manufacturer_constants.SET_2605: Set2605
-        },
-        manufacturer_constants.REV: {
-            manufacturer_constants.Telecontrol: Telecontrol,
-            manufacturer_constants.Ritter: Ritter
-        },
-    }
+    DEVICE_IMPLEMENTATIONS_DICT = {}
 
     _broadcast_message = b'SEARCH HCGW'
 
@@ -107,6 +36,69 @@ class RaspyRFMClient:
         self._manufacturer = None
         self._model = None
         self._firmware_version = None
+
+        RaspyRFMClient.reload_device_implementations()
+
+    @staticmethod
+    def reload_device_implementations() -> None:
+        """
+        Finds device implementations in the "device" package.
+        This works by searching for classes that have the device base class as a superclass
+        """
+
+        global DEVICE_IMPLEMENTATIONS_DICT
+        DEVICE_IMPLEMENTATIONS_DICT = {}
+
+        print("Loading implementation classes...")
+
+        def import_submodules(package, recursive=True):
+            """ Import all submodules of a module, recursively, including subpackages
+
+            :param package: package (name or actual module)
+            :param recursive: loads all subpackages
+            :type package: str | module
+            :rtype: dict[str, types.ModuleType]
+            """
+            import pkgutil
+            import importlib
+
+            if isinstance(package, str):
+                package = importlib.import_module(package)
+            results = {}
+            for loader, name, is_pkg in pkgutil.walk_packages(package.__path__):
+                full_name = package.__name__ + '.' + name
+                results[full_name] = importlib.import_module(full_name)
+                if recursive and is_pkg:
+                    results.update(import_submodules(full_name))
+            return results
+
+        def get_all_subclasses(base_class):
+            """
+            Returns a list of all currently imported classes that are subclasses (even multiple levels)
+            of the specified base class.
+            :param base_class: base class to match classes to
+            :return: list of classes
+            """
+            all_subclasses = []
+
+            for subclass in base_class.__subclasses__():
+                all_subclasses.append(subclass)
+                all_subclasses.extend(get_all_subclasses(subclass))
+
+            return all_subclasses
+
+        from raspyrfm_client.device import manufacturer
+        import_submodules(manufacturer)
+
+        for device_implementation in get_all_subclasses(Device):
+            device_instance = device_implementation()
+            brand = device_instance.get_manufacturer()
+            model = device_instance.get_model()
+
+            if brand not in DEVICE_IMPLEMENTATIONS_DICT:
+                DEVICE_IMPLEMENTATIONS_DICT[brand] = {}
+
+            DEVICE_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
 
     def search(self) -> str:
         """
@@ -191,12 +183,19 @@ class RaspyRFMClient:
         """
         return self._firmware_version
 
-    def get_device(self, manufacturer: str, model: str) -> Device:
-        return self.__manufacturer_model_dict[manufacturer][model]()
+    @staticmethod
+    def get_device(manufacturer: str, model: str) -> Device:
+        return DEVICE_IMPLEMENTATIONS_DICT[manufacturer][model]()
 
-    def list_supported_devices(self):
-        import pprint
-        pprint.pprint(self.__manufacturer_model_dict)
+    @staticmethod
+    def list_supported_devices():
+        for manufacturer in DEVICE_IMPLEMENTATIONS_DICT:
+            print(manufacturer)
+            for model in DEVICE_IMPLEMENTATIONS_DICT[manufacturer].keys():
+                print("  " + model)
+
+                # import pprint
+                # pprint.pprint(DEVICE_IMPLEMENTATIONS_DICT)
 
     def send(self, device: Device, action: str) -> None:
         """
