@@ -1,4 +1,4 @@
-xs1-api-client
+raspyrfm-client
 ==============
 
 A python library for accessing actuator and sensor data on the the EZcontrol® XS1 Gateway using their HTTP API.
@@ -9,13 +9,14 @@ How to use
 Installation
 ------------
 
-:code:`pip install xs1-api-client`
+:code:`pip install raspyrfm-client`
 
 Usage
 -----
 
-For a basic example have a look at the `example.py <https://github.com/markusressel/xs1-api-client/blob/master/example.py>`_ file.
-If you need more info have a look at the `documentation <http://xs1-api-client.readthedocs.io/>`_ which should help.
+For a basic example have a look at the `example.py <https://github.com/markusressel/raspyrfm-client/blob/master/example_simple.py>`_ file.
+
+If you need more info have a look at the `documentation <http://raspyrfm-client.readthedocs.io/>`_ which should help.
 
 Basic Example
 -------------
@@ -28,9 +29,9 @@ Import required modules
    from raspyrfm_client.device.manufacturer import manufacturer_constants
 
 
-Create the `RaspyRFMClient` object
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you know the IP and Port of your RaspyRFM you can pass them as arguments:
+Create the :code:`RaspyRFMClient` object
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If you know the :code:`IP` and :code:`Port` of your :code:`RaspyRFM` you can pass them as arguments:
 
 .. code-block:: python
 
@@ -42,43 +43,68 @@ or
 
    rfm_client = RaspyRFMClient("192.168.2.10") # defaults to port 49880
 
-Otherwise you can just create it without.
+Otherwise you can just create it without:
 
 .. code-block:: python
 
    rfm_client = RaspyRFMClient()
 
-and then let the client search for the RaspyRFM with:
+and then let the client search for the :code:`RaspyRFM` automatically with:
 
 .. code-block:: python
 
    ip = rfm_client.search()
 
-This will return an `IP address` if a RaspyRFM module was found.
+This will return an :code:`IP Address` if a :code:`RaspyRFM` module was found.
+
+**WARNING:** currently the search() method only works on linux systems :(
 
 Get a Device
 ^^^^^^^^^^^^
 
-To get a quick overview of what manufacturers and models are supported call:
+To get a quick overview of what **manufacturers** and **models** are supported call:
 
 .. code-block:: python
 
    rfm_client.list_supported_devices()
 
-which will give you a indented list of supported manufacturers and their supported models. Use the names in this list to get a device in the next step.
+which will give you an indented list of supported manufacturers and their supported models similar to this:
 
-To generate codes for a device you first have to get an instance of its implementation. Use the following method to get just that:
+.. code-block:: text
+
+   Elro
+     RC3500-A IP44 DE
+     AB440S
+     AB440D 200W
+     AB440D 300W
+     AB440ID
+     AB440IS
+     AB440L
+     AB440SC
+     AB440WD
+   BAT
+     RC AAA1000-A IP44 Outdoor
+   Brennenstuhl
+     RCS 1000 N Comfort
+     RCS 1044 N Comfort
+   Intertek
+     Model 1919361
+   [...]
+
+**Use the names in this list (or better yet: :code:`manufacturer_constants.py` constants) to get a device in the next step.**
+
+To generate codes for a device **you first have to get an instance of its implementation**. Use the following method to get just that:
 
 .. code-block:: python
 
    brennenstuhl_rcs1000 = rfm_client.get_device(manufacturer_constants.BRENNENSTUHL,
                                              manufacturer_constants.RCS_1000_N_COMFORT)
 
-It is always a good choice to only use values present in `manufacturer_constants` but if needed this can also be a `string`. These should always be the same values as the ones printed by the `list_supported_devices()` method.
+It is always a good choice to **only use values present in :code:`manufacturer_constants`** but if needed this can also be a :code:`string`. These should always be the same values as the ones printed by the :code:`list_supported_devices()` method.
 
 Generate action codes
 ^^^^^^^^^^^^^^^^^^^^^
-Now that you have an implementation instance you can generate codes for supported actions by using an `actions` constant that you imported previously.
+Now that you have an implementation instance you can generate codes for supported actions by using an :code:`actions` constant that you imported previously.
 
 To get a list of supported actions call:
 
@@ -92,7 +118,7 @@ and generate a code with:
 
    code = brennenstuhl_rcs1000.generate_code(actions.ON)
 
-Send the code to the RaspyRFM module
+Send the code to the :code:`RaspyRFM` module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To send a code for your device of choice you can combine the two objects in this call:
 
@@ -110,7 +136,7 @@ License
 
 ::
 
-    xs1-api-client by Markus Ressel
+    raspyrfm- by Markus Ressel
     Copyright (C) 2017  Markus Ressel
 
     This program is free software: you can redistribute it and/or modify
