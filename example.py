@@ -59,7 +59,6 @@ print(str(elro_ab440id))
 print(elro_ab440id.generate_code(actions.ON))
 print(elro_ab440id.generate_code(actions.OFF))
 
-
 print("")
 elro_ab440s = rfm_client.get_device(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
 
