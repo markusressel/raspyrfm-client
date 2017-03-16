@@ -25,7 +25,7 @@ class RC3500_A_IP44_DE(Device):
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(RC3500_A_IP44_DE, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.RC3500_A_IP44_DE)
+        super(RC3500_A_IP44_DE, self).__init__(manufacturer_constants.BAT, manufacturer_constants.RC3500_A_IP44_DE)
 
     def set_channel_config(self, **channel_arguments) -> None:
         """
