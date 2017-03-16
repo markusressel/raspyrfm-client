@@ -95,7 +95,7 @@ class RaspyRFMClient:
             if brand not in self._DEVICE_IMPLEMENTATIONS_DICT:
                 self._DEVICE_IMPLEMENTATIONS_DICT[brand] = {}
 
-                self._DEVICE_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
+            self._DEVICE_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
 
     def search(self) -> str or None:
         """
