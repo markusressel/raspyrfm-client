@@ -3,55 +3,53 @@ from raspyrfm_client.device.base import Device
 
 
 class HX2262Compatible(Device):
-    _lo = "1,"
-    _hi = "3,"
-    _seqLo = _lo + _hi + _lo + _hi
-    _seqHi = _hi + _lo + _hi + _lo
-    _seqFl = _lo + _hi + _hi + _lo
+    _lo = 1
+    _hi = 3
+    _seqLo = [(_lo, _hi), (_lo, _hi)]
+    _seqHi = [(_hi, _lo), (_hi, _lo)]
+    _seqFl = [(_lo, _hi), (_hi, _lo)]
 
-    _head_connair = "TXP:0,0,10,5600,350,25,"
-    
-    _sync_high = "1,"
-    _sync_low = "31"
-    _tail_connair = _sync_high + _sync_low + ";"
-
-    
-    _dips = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+    _bits = []
 
     from raspyrfm_client.device.manufacturer import manufacturer_constants
     def __init__(self, manufacturer: str = manufacturer_constants.UNIVERSAL, model: str = manufacturer_constants.HX2262):
-        super().__init__(manufacturer, model)
+        super().__init__(manufacturer, model, {'repetitions': 5, 'pauselen': 5600, 'steplen': 375})
 
     def set_channel_config(self, **channel_arguments) -> None:
         """
-        :param channel_arguments: dips=[boolean]
+        :param channel_arguments: bits=['0'|'1'|'f']
         """
-        for dip in self._dips:
+        for dip in self._bits:
             if dip not in channel_arguments:
                 raise ValueError("arguments should contain key \"" + str(dip) + "\"")
+            self._bits.append(channel_arguments[dip])
 
         self._channel = channel_arguments
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
+        
+    def set_bits(self, bits: []):
+        self._bits = bits
 
     def generate_code(self, action: str = None) -> str:
-        dips = self.get_channel_config()
-        if dips is None:
-            raise ValueError("Missing channel configuration :(")
-
-        seq = ""
+        tuples = []
         
-        for dip in self._dips:
-            dip_value = str(self.get_channel_config()[dip]).lower()
-            if dip_value.lower() == 'f':
-                seq += self._seqFl
-            elif dip_value.lower() == '0':
-                seq += self._seqLo
-            elif dip_value.lower() == '1':
-                seq += self._seqHi
+        if len(self._bits) != 12:
+            raise ValueError("Bits not configured")
+        
+        for bits in self._bits:
+            bit_value = bits.lower()
+            if bit_value == 'f':
+                tuples += self._seqFl
+            elif bit_value == '0':
+                tuples += self._seqLo
+            elif bit_value == '1':
+                tuples += self._seqHi
             else:
                 raise ValueError(
-                    "Invalid dip value \"" + dip_value + "\"! Must be one of ['0', '1', 'f'] (case insensitive)")
+                    "Invalid dip value \"" + bit_value + "\"! Must be one of ['0', '1', 'f'] (case insensitive)")
+        
+        tuples.append( (1, 31) )  #sync pulse
 
-        return self._head_connair + seq + self._tail_connair
+        return super().generate_conair_code(tuples)

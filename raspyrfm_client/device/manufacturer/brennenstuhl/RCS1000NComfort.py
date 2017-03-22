@@ -1,32 +1,14 @@
 from raspyrfm_client.device import actions
-from raspyrfm_client.device.base import Device
+from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX2262Compatible
 
 
-class RCS1000NComfort(Device):
-    _lo = "1,"
-    _hi = "3,"
-    _seqLo = _lo + _hi + _lo + _hi
-    _seqHi = _hi + _lo + _hi + _lo
-    _seqFl = _lo + _hi + _hi + _lo
-    _on = _seqLo + _seqFl
-    _off = _seqFl + _seqLo
-
-    _tx433version = "1,"
-
-    _s_speed_connair = "14"
-    _head_connair = "TXP:0,0,10,5600,350,25,"
-    _tail_connair = _tx433version + _s_speed_connair + ";"
-
-    _s_speed_itgw = "32,"
-    _head_itgw = "0,0,10,11200,350,26,0,"
-    _tail_itgw = _tx433version + _s_speed_itgw + "0"
-
+class RCS1000NComfort(HX2262Compatible):
     _dips = ['1', '2', '3', '4', '5', 'A', 'B', 'C', 'D', 'E']
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(RCS1000NComfort, self).__init__(manufacturer_constants.BRENNENSTUHL,
-                                              manufacturer_constants.RCS_1000_N_COMFORT)
+        super().__init__(manufacturer_constants.BRENNENSTUHL,
+                         manufacturer_constants.RCS_1000_N_COMFORT)
 
     def set_channel_config(self, **channel_arguments) -> None:
         """
@@ -42,25 +24,27 @@ class RCS1000NComfort(Device):
         return [actions.ON, actions.OFF]
 
     def generate_code(self, action: str) -> str:
-        dips = self.get_channel_config()
-        if dips is None:
+        cfg = self.get_channel_config()
+        if cfg is None:
             raise ValueError("Missing channel configuration :(")
-
         if action not in self.get_supported_actions():
             raise ValueError("Unsupported action: " + action)
-
-        seq = ""
-
-        for dip in self._dips:
-            dip_is_on = self.get_channel_config()[dip]
-            if dip_is_on:
-                seq += self._seqLo
-            else:
-                seq += self._seqFl
-
+            
+        bits = []
+        
+        for i in range(5):
+            bits.append('0' if cfg[chr(i + ord('1'))] else 'f')
+            
+        for i in range(5):
+            bits.append('0' if cfg[chr(i + ord('A'))]  else 'f')
+            
         if action is actions.ON:
-            return self._head_connair + seq + self._on + self._tail_connair
+            bits += ['f', 'f']
         elif action is actions.OFF:
-            return self._head_connair + seq + self._off + self._tail_connair
+            bits += ['f', '0']
         else:
             raise ValueError("Invalid action")
+            
+        super().set_bits(bits)
+            
+        return super().generate_code()
