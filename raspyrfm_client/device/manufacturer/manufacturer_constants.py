@@ -39,7 +39,15 @@ MODEL_1919361 = "Model 1919361"
 
 MUMBI = "Mumbi"
 
+M_E = "m-e GmbH modern-electronics"
+FLS100 = "FLS-100"
+
+
 M_FS300 = "m-FS300"
+
+NONAME = "xxx"
+
+RSL366 = "RSL366"
 
 POLLIN_ELECTRONIC = "Pollin Electronic"
 SET_2605 = "Set 2605"
