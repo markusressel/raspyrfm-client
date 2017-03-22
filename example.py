@@ -3,8 +3,8 @@ from raspyrfm_client.device import actions
 from raspyrfm_client.device.manufacturer import manufacturer_constants
 
 """ RaspyRFM Client """
-# rfm_client = RaspyRFMClient("192.168.2.40")
-rfm_client = RaspyRFMClient()
+rfm_client = RaspyRFMClient("10.0.1.64")
+#rfm_client = RaspyRFMClient()
 print(rfm_client.search())
 
 rfm_client.list_supported_devices()
@@ -164,3 +164,17 @@ print(str(intertek))
 
 print(intertek.generate_code(actions.ON))
 print(intertek.generate_code(actions.OFF))
+
+
+""" Intertechno ITS-150 """
+print("")
+its150 = rfm_client.get_device(manufacturer_constants.INTERTECHNO, manufacturer_constants.ITS_150)
+
+its150.set_channel_config(**{
+    'CODE': 'I',    #house code A-P
+    'GROUP': '2',   #group 1-4
+    'CH': '1'       #channel (key) 1-4
+})
+
+print(str(its150))
+rfm_client.send(its150, actions.ON)

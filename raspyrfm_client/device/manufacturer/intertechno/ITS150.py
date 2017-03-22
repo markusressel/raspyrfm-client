@@ -1,28 +1,30 @@
 from raspyrfm_client.device import actions
 from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX2262Compatible
+import re
 
-
-class RCS1000NComfort(HX2262Compatible):
-    _dips = ['1', '2', '3', '4', '5', 'A', 'B', 'C', 'D', 'E']
-
+class ITS150(HX2262Compatible):
+    _argchecks = {
+        'CODE': '[A-P]$',
+        'GROUP': '[1-4]$',
+        'CH': '[1-4]$'
+    }
+		
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super().__init__(manufacturer_constants.BRENNENSTUHL,
-                         manufacturer_constants.RCS_1000_N_COMFORT)
-
+        super().__init__(manufacturer_constants.INTERTECHNO, manufacturer_constants.ITS_150)
+				
     def set_channel_config(self, **channel_arguments) -> None:
-        """
-        :param channel_arguments: 1=False, 2=False, ... , 5=False, A=True, B=False, ... , E=False
-        """
-        for dip in self._dips:
-            if dip not in channel_arguments:
-                raise ValueError("arguments should contain key \"" + str(dip) + "\"")
-
+        for arg in self._argchecks:
+            if arg not in channel_arguments:
+                raise ValueError("arguments should contain key \"CODE\"")
+            if re.match(self._argchecks[arg], channel_arguments[arg]) is None:
+                raise ValueError("argument \"" + arg + "\" out of range")
+                
         self._channel = channel_arguments
-
+ 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
-
+        
     def generate_code(self, action: str) -> str:
         cfg = self.get_channel_config()
         if cfg is None:
@@ -32,12 +34,20 @@ class RCS1000NComfort(HX2262Compatible):
             
         bits = []
         
-        for i in range(5):
-            bits.append('0' if cfg[chr(i + ord('1'))] else 'f')
+        code = ord(cfg['CODE']) - ord('A')
+        for i in range(4):
+            bits.append('f' if (code & 1<<i != 0) else '0')
             
-        for i in range(5):
-            bits.append('0' if cfg[chr(i + ord('A'))]  else 'f')
+        ch = int(cfg['CH']) - 1
+        for i in range(2):
+            bits.append('f' if (ch & 1<<i != 0) else '0')
             
+        grp = int(cfg['GROUP']) - 1
+        for i in range(2):
+            bits.append('f' if (grp & 1<<i != 0) else '0')
+            
+        bits += ['0', 'f'] #fixed
+
         if action is actions.ON:
             bits += ['f', 'f']
         elif action is actions.OFF:
