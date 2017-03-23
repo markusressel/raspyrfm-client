@@ -58,10 +58,12 @@ Telecontrol = "Telecontrol"
 Ritter = "Ritter"
 
 UNIVERSAL = "Universal"
-
 HX2262 = "HX2262"
 
 VIVANCO = "Vivanco"
 
 FSS31000W = "FSS31000W"
 FSS33600W = "FSS33600W"
+
+WESTFALIA = "Westfalia"
+ZTC_S316A = "ZTC-S316A"
