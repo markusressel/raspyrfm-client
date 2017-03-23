@@ -8,6 +8,9 @@ class ITS150(HX2262Compatible):
         'CH': '[1-4]$'
     }
     
+    _l = '0'
+    _h = 'f'
+    
     _on = ['f', 'f']
     _off = ['f', '0']
 		
@@ -18,26 +21,18 @@ class ITS150(HX2262Compatible):
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
         
-    def generate_code(self, action: str) -> str:
+    def get_bits(self, action: str):
         cfg = self.get_channel_config()
-        if cfg is None:
-            raise ValueError("Missing channel configuration :(")
-        if action not in self.get_supported_actions():
-            raise ValueError("Unsupported action: " + action)
-            
         bits = []
         
         code = ord(cfg['CODE']) - ord('A')
-        for i in range(4):
-            bits.append('f' if (code & 1<<i != 0) else '0')
-            
+        bits += self.calc_int_bits(code, 4)
+        
         ch = int(cfg['CH']) - 1
-        for i in range(2):
-            bits.append('f' if (ch & 1<<i != 0) else '0')
-            
+        bits += self.calc_int_bits(ch, 2)
+                    
         grp = int(cfg['GROUP']) - 1
-        for i in range(2):
-            bits.append('f' if (grp & 1<<i != 0) else '0')
+        bits += self.calc_int_bits(grp, 2)
             
         bits += ['0', 'f'] #fixed
 
@@ -48,6 +43,4 @@ class ITS150(HX2262Compatible):
         else:
             raise ValueError("Invalid action")
             
-        super().set_bits(bits)
-            
-        return super().generate_code()
+        return bits

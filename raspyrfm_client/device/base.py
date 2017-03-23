@@ -36,7 +36,6 @@ class Device(object):
         """
         :return: boolean if check is ok
         """
-        print ("CHECKS:", self._argchecks)
         for arg in self._argchecks:
             if arg not in channel_arguments:
                 raise ValueError("arguments should contain key \"" + arg + "\"")
@@ -69,14 +68,15 @@ class Device(object):
 
     def generate_code(self, action: str) -> str:
         """
-        This method should be implemented by inheriting classes
-
+        This method can be implemented by inheriting classes if it does not implement get_pulse_data
         :param action: action to execute
         :return: signal code
         """
-        raise NotImplementedError
-        
-    def generate_conair_code(self, data: []) -> None:
+        if self.get_channel_config() is None:
+            raise ValueError("Missing channel configuration :(")
+        if action not in self.get_supported_actions():
+            raise ValueError("Unsupported action: " + action)
+            
         if self._connair_params is None:
             raise ValueError("connair parameters not set")
         if 'repetitions' not in self._connair_params:
@@ -85,13 +85,16 @@ class Device(object):
             raise ValueError("connair pauselen missing")
         if 'steplen' not in self._connair_params:
             raise ValueError("connair steplen missing")
+        
+        pulsedata = self.get_pulse_data(action)
         _head_connair = "TXP:0,0,"
         _code = _head_connair
         _code = _code + str(self._connair_params['repetitions']) + ','
         _code = _code + str(self._connair_params['pauselen']) + ','
         _code = _code + str(self._connair_params['steplen']) + ','
-        _code = _code + str(len(data)) + ','
-        for pulse in data:
+        
+        _code = _code + str(len(pulsedata)) + ','
+        for pulse in pulsedata:
             _code = _code + str(pulse[0]) + ','
             _code = _code + str(pulse[1]) + ','
         return _code[:-1]

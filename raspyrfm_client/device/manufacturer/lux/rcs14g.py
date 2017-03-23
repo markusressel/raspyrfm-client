@@ -24,16 +24,10 @@ class ZtcS316A(HX2262Compatible):
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
-
-    def generate_code(self, action: str) -> str:
-        cfg = self.get_channel_config()
-        if cfg is None:
-            raise ValueError("Missing channel configuration :(")
-        if action not in self.get_supported_actions():
-            raise ValueError("Unsupported action: " + action)
-            
-        bits = []
         
+    def get_bits(self, action: str):
+        cfg = self.get_channel_config()
+        bits = []
         bits += self._codes[int(cfg['CH']) - 1]
         
         if action is actions.ON:
@@ -43,6 +37,4 @@ class ZtcS316A(HX2262Compatible):
         else:
             raise ValueError("Invalid action")
             
-        super().set_bits(bits)
-        
-        return super().generate_code()
+        return bits
