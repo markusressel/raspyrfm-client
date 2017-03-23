@@ -35,6 +35,9 @@ YCR_1000 = "YCR 1000"
 
 INTERTEK = "Intertek"
 
+LOGILINK = "LogiLink"
+EC000X = "LogiLight EC000x"
+
 LUX_GMBH = "Emil Lux GmbH"
 RCS_14G = "RCS-14G"
 
