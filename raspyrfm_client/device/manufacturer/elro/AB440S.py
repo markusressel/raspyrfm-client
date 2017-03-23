@@ -10,7 +10,7 @@ class AB440S(HX2262Compatible):
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(AB440S, self).__init__(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
+        super().__init__(manufacturer_constants.ELRO, manufacturer_constants.AB440S)
 
     def set_channel_config(self, **channel_arguments) -> None:
         """
