@@ -38,7 +38,7 @@ class Set2605(HX2262Compatible):
             if dip_is_on:
                 bits += ['0']
             else:
-                bits += ['1']
+                bits += ['f']
         
         if action is actions.ON:
             bits += self._on
