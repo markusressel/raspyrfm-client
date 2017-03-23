@@ -1,6 +1,5 @@
 from raspyrfm_client.device import actions
 from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX2262Compatible
-import re
 
 class ITS150(HX2262Compatible):
     _argchecks = {
@@ -8,20 +7,14 @@ class ITS150(HX2262Compatible):
         'GROUP': '[1-4]$',
         'CH': '[1-4]$'
     }
+    
+    _on = ['f', 'f']
+    _off = ['f', '0']
 		
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
         super().__init__(manufacturer_constants.INTERTECHNO, manufacturer_constants.ITS_150)
 				
-    def set_channel_config(self, **channel_arguments) -> None:
-        for arg in self._argchecks:
-            if arg not in channel_arguments:
-                raise ValueError("arguments should contain key \"CODE\"")
-            if re.match(self._argchecks[arg], channel_arguments[arg]) is None:
-                raise ValueError("argument \"" + arg + "\" out of range")
-                
-        self._channel = channel_arguments
- 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
         
@@ -49,9 +42,9 @@ class ITS150(HX2262Compatible):
         bits += ['0', 'f'] #fixed
 
         if action is actions.ON:
-            bits += ['f', 'f']
+            bits += self._on
         elif action is actions.OFF:
-            bits += ['f', '0']
+            bits += self._off
         else:
             raise ValueError("Invalid action")
             
