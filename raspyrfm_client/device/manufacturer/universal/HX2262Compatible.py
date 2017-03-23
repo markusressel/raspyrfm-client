@@ -10,21 +10,12 @@ class HX2262Compatible(Device):
     _seqFl = [(_lo, _hi), (_hi, _lo)]
 
     _bits = []
+    
+    _connair_params = {'repetitions': 5, 'pauselen': 5600, 'steplen': 375}
 
     from raspyrfm_client.device.manufacturer import manufacturer_constants
     def __init__(self, manufacturer: str = manufacturer_constants.UNIVERSAL, model: str = manufacturer_constants.HX2262):
-        super().__init__(manufacturer, model, {'repetitions': 5, 'pauselen': 5600, 'steplen': 375})
-
-    def set_channel_config(self, **channel_arguments) -> None:
-        """
-        :param channel_arguments: bits=['0'|'1'|'f']
-        """
-        for dip in self._bits:
-            if dip not in channel_arguments:
-                raise ValueError("arguments should contain key \"" + str(dip) + "\"")
-            self._bits.append(channel_arguments[dip])
-
-        self._channel = channel_arguments
+        super().__init__(manufacturer, model)
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
@@ -38,8 +29,8 @@ class HX2262Compatible(Device):
         if len(self._bits) != 12:
             raise ValueError("Bits not configured")
         
-        for bits in self._bits:
-            bit_value = bits.lower()
+        for bit in self._bits:
+            bit_value = bit.lower()
             if bit_value == 'f':
                 tuples += self._seqFl
             elif bit_value == '0':
@@ -51,5 +42,5 @@ class HX2262Compatible(Device):
                     "Invalid dip value \"" + bit_value + "\"! Must be one of ['0', '1', 'f'] (case insensitive)")
         
         tuples.append( (1, 31) )  #sync pulse
-
+        
         return super().generate_conair_code(tuples)

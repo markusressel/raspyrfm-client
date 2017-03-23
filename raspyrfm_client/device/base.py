@@ -2,13 +2,17 @@
 Base class for all device implementations
 """
 
+import re
+
 
 class Device(object):
-    def __init__(self, manufacturer: str, model: str, connairparams: {} = None):
+    _argchecks = {}
+    _connair_params = {}
+    
+    def __init__(self, manufacturer: str, model: str):
         self._manufacturer = manufacturer
         self._model = model
         self._channel = None
-        self._connair_params = connairparams
 
     def __str__(self):
         return ("Manufacturer: " + self._manufacturer + "\n" +
@@ -27,6 +31,19 @@ class Device(object):
         :return: the device model
         """
         return self._model
+        
+    def check_channel_config(self, **channel_arguments):
+        """
+        :return: boolean if check is ok
+        """
+        print ("CHECKS:", self._argchecks)
+        for arg in self._argchecks:
+            if arg not in channel_arguments:
+                raise ValueError("arguments should contain key \"" + arg + "\"")
+            if re.match(self._argchecks[arg], channel_arguments[arg]) is None:
+                raise ValueError("argument \"" + arg + "\" out of range")
+                
+        self._channel = channel_arguments
 
     def set_channel_config(self, **channel_arguments) -> None:
         """
@@ -35,7 +52,8 @@ class Device(object):
 
         :param channel_arguments:
         """
-        raise NotImplementedError
+        if self.check_channel_config(**channel_arguments):
+            self._channel = channel_arguments
         
     def get_channel_config(self) -> dict or None:
         """
