@@ -35,6 +35,9 @@ YCR_1000 = "YCR 1000"
 
 INTERTEK = "Intertek"
 
+LUX_GMBH = "Emil Lux GmbH"
+RCS_14G = "RCS-14G"
+
 MODEL_1919361 = "Model 1919361"
 
 MUMBI = "Mumbi"
