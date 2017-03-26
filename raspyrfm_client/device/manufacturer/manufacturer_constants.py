@@ -55,7 +55,7 @@ FLS100 = "FLS-100"
 
 M_FS300 = "m-FS300"
 
-NONAME = "xxx"
+NONAME = "noname"
 
 RSL366 = "RSL366"
 
