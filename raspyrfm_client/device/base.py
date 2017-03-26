@@ -6,7 +6,13 @@ import re
 
 
 class Device(object):
+    """
+    regular expression check for channel config
+    _argchecks example:
+    _argschecks = {"ID": "^[A-F]$", "CH": "^[1-4]$"}
+    """
     _argchecks = {}
+
     _connair_params = {}
     
     def __init__(self, manufacturer: str, model: str):
@@ -34,13 +40,13 @@ class Device(object):
         
     def check_channel_config(self, **channel_arguments):
         """
-        :return: boolean if check is ok
+        :return: boolean if check is ok, see documentation for member _argchecks
         """
         for arg in self._argchecks:
             if arg not in channel_arguments:
                 raise ValueError("arguments should contain key \"" + arg + "\"")
-            if re.match(self._argchecks[arg], channel_arguments[arg]) is None:
-                raise ValueError("argument \"" + arg + "\" out of range")
+            if re.match(self._argchecks[arg], str(channel_arguments[arg])) is None:
+                raise ValueError("argument \"" + arg + "\" out of range, does not match to " + self._argchecks[arg])
                 
         self._channel = channel_arguments
 

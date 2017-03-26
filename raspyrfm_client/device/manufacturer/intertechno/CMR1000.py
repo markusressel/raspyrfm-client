@@ -4,7 +4,8 @@ from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX226
 
 class CMR1000(HX2262Compatible):
     _argchecks = {
-        'master': '[A-P]$'
+        'master': '^[A-P]$',
+		'slave': '^([1-9]|[0][1-9]|[1][1-6])$'
     }
     
     _l = '0'
@@ -15,20 +16,6 @@ class CMR1000(HX2262Compatible):
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
         super().__init__(manufacturer_constants.INTERTECHNO, manufacturer_constants.CMR_1000)
-
-    def set_channel_config(self, **channel_arguments) -> None:
-        """
-        :param channel_arguments: master='A', slave=1
-        """
-        self.check_channel_config(**channel_arguments)
-
-        if "slave" not in channel_arguments:
-            raise ValueError("Invalid slave")
-            
-        if (channel_arguments['slave'] < 1) or (channel_arguments['slave'] > 16):
-            raise ValueError("Invalid slave")
-
-        self._channel = channel_arguments
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
