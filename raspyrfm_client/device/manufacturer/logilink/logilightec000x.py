@@ -2,7 +2,7 @@ from raspyrfm_client.device import actions
 from raspyrfm_client.device.base import Device
 
 
-class ZtcS316A(Device):
+class Ec000x(Device):
     _on = ['0', '1']
     _off = ['1', '0']
     
