@@ -6,15 +6,6 @@ import re
 
 
 class Device(object):
-    """
-    regular expression check for channel config
-    _argchecks example:
-    _argschecks = {"ID": "^[A-F]$", "CH": "^[1-4]$"}
-    """
-    _argchecks = {}
-
-    _connair_params = {}
-    
     def __init__(self, manufacturer: str, model: str):
         self._manufacturer = manufacturer
         self._model = model
@@ -38,18 +29,6 @@ class Device(object):
         """
         return self._model
         
-    def check_channel_config(self, **channel_arguments):
-        """
-        :return: boolean if check is ok, see documentation for member _argchecks
-        """
-        for arg in self._argchecks:
-            if arg not in channel_arguments:
-                raise ValueError("arguments should contain key \"" + arg + "\"")
-            if re.match(self._argchecks[arg], str(channel_arguments[arg])) is None:
-                raise ValueError("argument \"" + arg + "\" out of range, does not match to " + self._argchecks[arg])
-                
-        self._channel = channel_arguments
-
     def set_channel_config(self, **channel_arguments) -> None:
         """
         Sets the channel as multiple arguments.
@@ -57,8 +36,25 @@ class Device(object):
 
         :param channel_arguments:
         """
-        if self.check_channel_config(**channel_arguments):
-            self._channel = channel_arguments
+        argchecks = self.get_channel_config_args()
+        for arg in argchecks:
+            if arg not in channel_arguments:
+                raise ValueError("arguments should contain key \"" + arg + "\"")
+            if re.match(argchecks[arg], str(channel_arguments[arg])) is None:
+                raise ValueError("argument \"" + arg + "\" out of range, does not match to " + argchecks[arg])
+                
+        self._channel = channel_arguments
+        
+    def get_channel_config_args(self):
+        """
+        gets required config arguments and their regular expression to check the erguments
+        has to be implemented by inheriting classes
+        
+        :return: dictionary of arguments
+        
+        example: {"ID": "^[A-F]$", "CH": "^[1-4]$"}
+        """
+        raise NotImplementedError
         
     def get_channel_config(self) -> dict or None:
         """
@@ -71,7 +67,16 @@ class Device(object):
         :return: the supported actions of this device
         """
         raise NotImplementedError
-
+        
+    def get_pulse_data(self):
+        """
+        generates pulse data
+        :return: (pulse pairs, repetitions, timebase)
+        """
+        raise NotImplementedError
+        
+    
+    #obsolete as soon as a different layer generations code from pulse_data
     def generate_code(self, action: str) -> str:
         """
         This method can be implemented by inheriting classes if it does not implement get_pulse_data
@@ -83,24 +88,15 @@ class Device(object):
         if action not in self.get_supported_actions():
             raise ValueError("Unsupported action: " + action)
             
-        if self._connair_params is None:
-            raise ValueError("connair parameters not set")
-        if 'repetitions' not in self._connair_params:
-            raise ValueError("connair repetitions missing")
-        if 'pauselen' not in self._connair_params:
-            raise ValueError("connair pauselen missing")
-        if 'steplen' not in self._connair_params:
-            raise ValueError("connair steplen missing")
-        
         pulsedata = self.get_pulse_data(action)
         _head_connair = "TXP:0,0,"
         _code = _head_connair
-        _code = _code + str(self._connair_params['repetitions']) + ','
-        _code = _code + str(self._connair_params['pauselen']) + ','
-        _code = _code + str(self._connair_params['steplen']) + ','
+        _code = _code + str(pulsedata[1]) + ',' #add repetitions
+        _code = _code + str(5600) + ','
+        _code = _code + str(pulsedata[2]) + ',' #add timebase
         
-        _code = _code + str(len(pulsedata)) + ','
-        for pulse in pulsedata:
+        _code = _code + str(len(pulsedata[0])) + ','
+        for pulse in pulsedata[0]:
             _code = _code + str(pulse[0]) + ','
             _code = _code + str(pulse[1]) + ','
         return _code[:-1]

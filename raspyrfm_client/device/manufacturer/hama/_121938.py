@@ -10,12 +10,9 @@ class HAMA(Device):
     _sync = (_sho, 40)
     _chmap = [_lo + _lo, _lo + _hi, _hi + _lo]
     
-    _connair_params = {'repetitions': 6, 'pauselen': 5600, 'steplen': 250}
-    
-    _argchecks = {
-        'CODE': '[01]{26}$',
-        'CH': '[1-3]$'
-    }
+    _repetitoins = 6
+    _timebase = 250
+    _pausedata = 5600 #not really needed, just for keeping reenginering data
     
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
@@ -23,6 +20,12 @@ class HAMA(Device):
     
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
+        
+    def get_channel_config_args(self):
+        return {
+            'CODE': '[01]{26}$',
+            'CH': '[1-3]$'            
+        }
         
     def get_pulse_data(self, action: str):
         tuples = []
@@ -44,4 +47,4 @@ class HAMA(Device):
         
         tuples += [self._sync]
         
-        return tuples
+        return tuples, self._repetitoins, self._timebase
