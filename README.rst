@@ -5,7 +5,8 @@ A python library that allows the generation of network codes for the RaspyRFM rc
 
 Build Status
 ============
-[![Build Status](https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=master)](https://travis-ci.org/markusressel/raspyrfm-client)
+.. image:: https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=master
+:target: https://travis-ci.org/markusressel/raspyrfm-client
 
 How to use
 ==========
