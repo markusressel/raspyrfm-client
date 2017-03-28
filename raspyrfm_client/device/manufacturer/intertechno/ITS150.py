@@ -3,6 +3,8 @@ from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX226
 
 
 class ITS150(HX2262Compatible):
+    DISABLED = True
+
     _l = '0'
     _h = 'f'
     _on = [_h, _h]

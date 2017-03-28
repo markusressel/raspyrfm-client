@@ -92,6 +92,10 @@ class RaspyRFMClient:
             brand = device_instance.get_manufacturer()
             model = device_instance.get_model()
 
+            # ignore classes that are disabled by the developer
+            if hasattr(device_instance, "DISABLED") and device_instance.DISABLED is True:
+                continue
+
             if brand not in self._DEVICE_IMPLEMENTATIONS_DICT:
                 self._DEVICE_IMPLEMENTATIONS_DICT[brand] = {}
 
