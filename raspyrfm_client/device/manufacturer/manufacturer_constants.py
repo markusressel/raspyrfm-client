@@ -66,7 +66,7 @@ REV = "REV"
 
 TELECONTROL8342C = "Telecontrol 8342C"
 TELECONTROL8342LC = "Telecontrol 8342LC"
-Ritter = "Ritter"
+RITTER = "Ritter"
 
 UNIVERSAL = "Universal"
 HX2262 = "HX2262"

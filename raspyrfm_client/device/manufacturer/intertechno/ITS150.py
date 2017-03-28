@@ -23,7 +23,7 @@ class ITS150(HX2262Compatible):
             'CH': '^[1-4]$'
         }
 
-    def get_bits(self, action: str):
+    def get_bit_data(self, action: str):
         cfg = self.get_channel_config()
         bits = []
 

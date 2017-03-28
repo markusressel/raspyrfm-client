@@ -11,7 +11,7 @@ class Ritter(HX2262Compatible):
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super(Ritter, self).__init__(manufacturer_constants.REV, manufacturer_constants.Ritter)
+        super(Ritter, self).__init__(manufacturer_constants.REV, manufacturer_constants.RITTER)
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
