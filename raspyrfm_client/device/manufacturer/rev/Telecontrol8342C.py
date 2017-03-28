@@ -15,7 +15,7 @@ class Telecontrol(HX2262Compatible):
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
-        
+
     def get_channel_config_args(self):
         return {
             'master': '[A-D]$',
@@ -23,22 +23,22 @@ class Telecontrol(HX2262Compatible):
         }
 
     def get_bit_data(self, action: str):
-        cfg = self.get_channel_config()     
+        cfg = self.get_channel_config()
         bits = []
-        
+
         for i in range(4):
             bits.append(self._h if cfg['master'] == chr(i + ord('A')) else self._l)
-            
+
         for i in range(3):
             bits.append(self._h if cfg['slave'] == str(i + 1) else self._l)
-            
-        bits += ['0', 'f', 'f'] #fixed
-        
+
+        bits += ['0', 'f', 'f']  # fixed
+
         if action is actions.ON:
             bits += self._on
         elif action is actions.OFF:
             bits += self._off
         else:
             raise ValueError("Invalid action")
-            
+
         return bits, self._repetitions

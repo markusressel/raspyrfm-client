@@ -15,28 +15,28 @@ class CMR1000(HX2262Compatible):
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
-        
+
     def get_channel_config_args(self):
         return {
             'master': '^[A-P]$',
             'slave': '^([1-9]|[0][1-9]|[1][1-6])$'
         }
-        
+
     def get_bit_data(self, action: str):
         cfg = self.get_channel_config()
         bits = []
-        
+
         master = ord(cfg['master']) - ord('A')
         bits += self.calc_int_bits(master, 4, (self._l, self._h))
-        
+
         slave = int(cfg['slave']) - 1
         bits += self.calc_int_bits(slave, 4, (self._l, self._h))
-        
-        bits += [self._l, self._h] #fixed
-        
+
+        bits += [self._l, self._h]  # fixed
+
         if action is actions.ON:
             bits += self._on
         elif action is actions.OFF:
             bits += self._off
-            
+
         return bits, self._repetitions

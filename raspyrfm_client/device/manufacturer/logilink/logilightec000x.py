@@ -5,16 +5,16 @@ from raspyrfm_client.device.base import Device
 class Ec000x(Device):
     _on = ['0', '1']
     _off = ['1', '0']
-    
+
     _lo = 1
     _hi = 3
     _seqLo = [(_lo, _hi)]
     _seqHi = [(_hi, _lo)]
     _sync = [(1, 31)]
-    
+
     _timebase = 3300
     _pauselen = 5600
-    
+
     _chvalues = [
         _seqHi + _seqHi + _seqHi,
         _seqLo + _seqHi + _seqHi,
@@ -28,13 +28,13 @@ class Ec000x(Device):
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF, actions.PAIR]
-        
+
     def get_channel_config_args(self):
         return {
             'CODE': '^[0-9A-F]{5}$',
             'CH': '^[1-4]$'
         }
-        
+
     def get_pulse_data(self, action: str):
         cfg = self.get_channel_config()
         tuples = []
@@ -46,20 +46,19 @@ class Ec000x(Device):
                 else:
                     tuples += self._seqLo
                 val <<= 1
-                
+
         if action is actions.ON:
             tuples += self._seqHi
-            repetitions  = 5
+            repetitions = 5
         elif action is actions.PAIR:
             tuples += self._seqHi
             repetitions = 15
         elif action is actions.OFF:
             tuples += self._seqLo
             repetitions = 5
-            
+
         tuples += self._chvalues[int(cfg['CH']) - 1]
-                  
+
         tuples += self._sync
-        
+
         return tuples, repetitions, self._timebase
-        
