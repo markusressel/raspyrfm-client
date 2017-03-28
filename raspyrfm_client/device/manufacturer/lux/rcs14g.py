@@ -1,45 +1,44 @@
 from raspyrfm_client.device import actions
 from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX2262Compatible
 
-class ITS150(HX2262Compatible):
-    _l = '0'
-    _h = 'f'
-    _on = [_h, _h]
-    _off = [_h, _l]
+
+class Rcs14G(HX2262Compatible):
+    _on = ['f', 'f']
+    _off = ['f', '0']
+        
+    _codes = [
+        ['0', '0', '0', 'f', 'f', '0', 'f', '0', 'f', 'f'],
+        ['0', '0', '0', 'f', 'f', 'f', '0', '0', 'f', 'f'],
+        ['0', '0', '0', 'f', '0', 'f', 'f', '0', 'f', 'f'],
+        ['0', '0', '0', '0', 'f', 'f', 'f', '0', 'f', 'f']
+    ]
+    
     _repetitions = 5
+        
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super().__init__(manufacturer_constants.INTERTECHNO, manufacturer_constants.ITS_150)
+        super().__init__(manufacturer_constants.LUX_GMBH, manufacturer_constants.RCS_14G)
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
         
     def get_channel_config_args(self):
         return {
-            'CODE': '^[A-P]$',
-            'GROUP': '^[1-4]$',
             'CH': '^[1-4]$'
         }
+    
         
-    def get_bits(self, action: str):
+    def get_bit_data(self, action: str):
         cfg = self.get_channel_config()
         bits = []
-        
-        code = ord(cfg['CODE']) - ord('A')
-        bits += self.calc_int_bits(code, 4, (self._l, self._h))
-        
-        ch = int(cfg['CH']) - 1
-        bits += self.calc_int_bits(ch, 2, (self._l, self._h))
-        
-        group = int(cfg['GROUP']) - 1
-        bits += self.calc_int_bits(group, 4, (self._l, self._h))
-        
-        bits += [self._l, self._h] #fixed
+        bits += self._codes[int(cfg['CH']) - 1]
         
         if action is actions.ON:
             bits += self._on
         elif action is actions.OFF:
             bits += self._off
+        else:
+            raise ValueError("Invalid action")
             
         return bits, self._repetitions
