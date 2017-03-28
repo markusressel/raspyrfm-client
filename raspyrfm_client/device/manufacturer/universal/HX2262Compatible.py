@@ -44,7 +44,7 @@ class HX2262Compatible(Device):
     def get_pulse_data(self, action: str):
         bitdata = self.get_bit_data(action)
 
-        print("bits:", bitdata[0])
+        # print("bits:", bitdata[0])
 
         if len(bitdata[0]) != 12:
             raise ValueError("Bits not configured")
