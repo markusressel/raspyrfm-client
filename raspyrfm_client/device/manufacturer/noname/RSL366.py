@@ -36,5 +36,4 @@ class RSL366(HX2262Compatible):
         else:
             raise ValueError("Invalid action")
 
-        print("BITS", bits)
         return bits, self._repetitions
