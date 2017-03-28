@@ -3,30 +3,32 @@ from raspyrfm_client.device.base import Device
 
 
 class IT1500(Device):    
-    _connair_params = {'repetitions': 6, 'pauselen': 11125, 'steplen': 275}
+    _repetitions = 6
+    _timebase = 275
+    _pausedata = 5600 #not really needed, just for keeping reenginering data
     
-    _argchecks = {
-        'CODE': '[01]{26}$',
-        'UNIT': '^([1-9]|0[0-9]|1[1-6])$'
-    }
-    
-    def __init__(self):
-        from raspyrfm_client.device.manufacturer import manufacturer_constants
-        super().__init__(manufacturer_constants.INTERTECHNO, manufacturer_constants.IT_1500)
+    from raspyrfm_client.device.manufacturer import manufacturer_constants
+    def __init__(self, manufacturer: str = manufacturer_constants.INTERTECHNO, model: str = manufacturer_constants.IT_1500):
+        super().__init__(manufacturer, model)
     
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
         
+    def get_channel_config_args(self):
+        return {
+            'CODE': '[01]{26}$',
+            'UNIT': '^([1-9]|0[0-9]|1[1-6])$'      
+        }
+        
     def get_pulse_data(self, action: str):
-        _lon = 5
         _sho = 1
-
+        _lon = 5
         _d0 = [(_sho, _sho), (_sho, _lon)]
         _d1 = [(_sho, _lon), (_sho, _sho)]
         _d = (_d0, _d1) #for bit builders
-
         _pre = (_sho, 10)
-        _post = [(_sho, 41)]
+        _post = [(_sho, 41)]        
+        
         tuples = [_pre]
         
         cfg = self.get_channel_config()
@@ -45,6 +47,5 @@ class IT1500(Device):
             tuples += _d1 if unit & 1<<i else _d0
 
         tuples += _post
-        print (tuples)
         
-        return tuples
+        return tuples, self._repetitions, self._timebase

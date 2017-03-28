@@ -10,7 +10,7 @@ class HAMA(Device):
     _sync = (_sho, 40)
     _chmap = [_lo + _lo, _lo + _hi, _hi + _lo]
     
-    _repetitoins = 6
+    _repetitions = 6
     _timebase = 250
     _pausedata = 5600 #not really needed, just for keeping reenginering data
     
@@ -23,8 +23,8 @@ class HAMA(Device):
         
     def get_channel_config_args(self):
         return {
-            'CODE': '[01]{26}$',
-            'CH': '[1-3]$'            
+            'CODE': '^[01]{26}$',
+            'CH': '^[1-3]$'            
         }
         
     def get_pulse_data(self, action: str):
@@ -47,4 +47,4 @@ class HAMA(Device):
         
         tuples += [self._sync]
         
-        return tuples, self._repetitoins, self._timebase
+        return tuples, self._repetitions, self._timebase

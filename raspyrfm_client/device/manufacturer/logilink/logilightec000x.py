@@ -12,7 +12,8 @@ class Ec000x(Device):
     _seqHi = [(_hi, _lo)]
     _sync = [(1, 31)]
     
-    _connair_params = {'repetitions': 5, 'pauselen': 5600, 'steplen': 300}
+    _timebase = 3300
+    _pauselen = 5600
     
     _chvalues = [
         _seqHi + _seqHi + _seqHi,
@@ -20,11 +21,6 @@ class Ec000x(Device):
         _seqHi + _seqLo + _seqHi,
         _seqHi + _seqHi + _seqLo
     ]
-    
-    _argchecks = {
-        'CODE': '[0-9A-F]{5}$',
-        'CH': '[1-4]$'
-    }
 
     def __init__(self):
         from raspyrfm_client.device.manufacturer import manufacturer_constants
@@ -32,6 +28,12 @@ class Ec000x(Device):
 
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF, actions.PAIR]
+        
+    def get_channel_config_args(self):
+        return {
+            'CODE': '^[0-9A-F]{5}$',
+            'CH': '^[1-4]$'
+        }
         
     def get_pulse_data(self, action: str):
         cfg = self.get_channel_config()
@@ -47,17 +49,17 @@ class Ec000x(Device):
                 
         if action is actions.ON:
             tuples += self._seqHi
-            self._connair_params['repetitions'] = 5
+            repetitions  = 5
         elif action is actions.PAIR:
             tuples += self._seqHi
-            self._connair_params['repetitions'] = 15
+            repetitions = 15
         elif action is actions.OFF:
             tuples += self._seqLo
-            self._connair_params['repetitions'] = 5
+            repetitions = 5
             
         tuples += self._chvalues[int(cfg['CH']) - 1]
                   
         tuples += self._sync
-        print(tuples)
-        return tuples
+        
+        return tuples, repetitions, self._timebase
         

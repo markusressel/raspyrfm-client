@@ -2,20 +2,18 @@ from raspyrfm_client.device import actions
 from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX2262Compatible
 
 
-class ZtcS316A(HX2262Compatible):
+class Rcs14G(HX2262Compatible):
     _on = ['f', 'f']
     _off = ['f', '0']
-    
-    _argchecks = {
-        'CH': '[1-4]$'
-    }
-    
+        
     _codes = [
         ['0', '0', '0', 'f', 'f', '0', 'f', '0', 'f', 'f'],
         ['0', '0', '0', 'f', 'f', 'f', '0', '0', 'f', 'f'],
         ['0', '0', '0', 'f', '0', 'f', 'f', '0', 'f', 'f'],
         ['0', '0', '0', '0', 'f', 'f', 'f', '0', 'f', 'f']
     ]
+    
+    _repetitions = 5
         
 
     def __init__(self):
@@ -25,7 +23,13 @@ class ZtcS316A(HX2262Compatible):
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
         
-    def get_bits(self, action: str):
+    def get_channel_config_args(self):
+        return {
+            'CH': '^[1-4]$'
+        }
+    
+        
+    def get_bit_data(self, action: str):
         cfg = self.get_channel_config()
         bits = []
         bits += self._codes[int(cfg['CH']) - 1]
@@ -37,4 +41,4 @@ class ZtcS316A(HX2262Compatible):
         else:
             raise ValueError("Invalid action")
             
-        return bits
+        return bits, self._repetitions

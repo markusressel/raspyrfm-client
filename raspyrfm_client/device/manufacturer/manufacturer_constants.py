@@ -64,7 +64,8 @@ SET_2605 = "Set 2605"
 
 REV = "REV"
 
-Telecontrol = "Telecontrol"
+TELECONTROL8342C = "Telecontrol 8342C"
+TELECONTROL8342LC = "Telecontrol 8342LC"
 Ritter = "Ritter"
 
 UNIVERSAL = "Universal"

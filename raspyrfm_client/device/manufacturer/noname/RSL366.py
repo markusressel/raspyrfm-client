@@ -3,13 +3,9 @@ from raspyrfm_client.device.manufacturer.universal.HX2262Compatible import HX226
 import re
 
 class RSL366(HX2262Compatible):
-    _argchecks = {
-        'CODE': '[1-4]$',
-        'CH': '[1-4]$'
-    }
-    
     _h = '0'
     _l = 'f'
+    _repetitions = 5
 		
     from raspyrfm_client.device.manufacturer import manufacturer_constants
     def __init__(self, manufacturer: str = manufacturer_constants.NONAME, model: str = manufacturer_constants.RSL366):
@@ -18,12 +14,18 @@ class RSL366(HX2262Compatible):
     def get_supported_actions(self) -> [str]:
         return [actions.ON, actions.OFF]
         
-    def get_bits(self, action: str):
+    def get_channel_config_args(self):
+        return {
+            'CODE': '^[1-4]$',
+            'CH': '^[1-4]$'
+        }
+        
+    def get_bit_data(self, action: str):
         cfg = self.get_channel_config()
         bits = []
         
-        bits += self.calc_match_bits(int(cfg['CODE']) - 1, 4)
-        bits += self.calc_match_bits(int(cfg['CH']) - 1, 4)
+        bits += self.calc_match_bits(int(cfg['CODE']) - 1, 4, (self._l, self._h))
+        bits += self.calc_match_bits(int(cfg['CH']) - 1, 4, (self._l, self._h))
         
         bits += [self._l, self._l, self._l] #fixed
         
@@ -35,4 +37,4 @@ class RSL366(HX2262Compatible):
             raise ValueError("Invalid action")
             
         print("BITS", bits)
-        return bits
+        return bits, self._repetitions
