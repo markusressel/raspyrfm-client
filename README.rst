@@ -1,7 +1,11 @@
 raspyrfm-client
-==============
+===============
 
 A python library that allows the generation of network codes for the RaspyRFM rc module.
+
+Build Status
+============
+[![Build Status](https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=master)](https://travis-ci.org/markusressel/raspyrfm-client)
 
 How to use
 ==========
