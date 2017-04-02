@@ -251,6 +251,11 @@ After you have implemented all methods you are good to go!
 Just call :code:`rfm_client.reload_device_implementations()` and :code:`rfm_client.list_supported_devices()` to check if your implementation is listed.
 If everything looks good you can use your implementation like any other one.
 
+Contributing
+============
+
+Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks 
+of this repository. Create Github tickets for bugs and new features and comment on the ones that you are interested in.
 
 License
 =======
