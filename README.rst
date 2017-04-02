@@ -1,7 +1,7 @@
 raspyrfm-client
 ===============
 
-A python library that allows the generation of network codes for the RaspyRFM rc module.
+A python 3.2+ library that allows the generation of network codes for the RaspyRFM rc module.
 
 Build Status
 ============
