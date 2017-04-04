@@ -3,9 +3,9 @@ from raspyrfm_client.device import actions
 from raspyrfm_client.device.manufacturer import manufacturer_constants
 
 """ RaspyRFM Client """
-# rfm_client = RaspyRFMClient("10.0.1.64")
-rfm_client = RaspyRFMClient()
-print(rfm_client.search())
+rfm_client = RaspyRFMClient("192.168.2.10")
+# rfm_client = RaspyRFMClient()
+# print(rfm_client.search())
 
 rfm_client.list_supported_devices()
 
