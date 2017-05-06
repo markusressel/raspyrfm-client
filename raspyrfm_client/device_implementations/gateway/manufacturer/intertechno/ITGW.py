@@ -22,13 +22,13 @@ class ITGW(Gateway):
             raise ValueError("Unsupported action: " + str(action))
 
         pulsedata = device.get_pulse_data(action)
-        _head_connair = "TXP:0,0,"
+        _head_connair = "0,0,"
         _code = _head_connair
         _code = _code + str(pulsedata[1]) + ','  # add repetitions
         _code = _code + str(5600) + ','
         _code = _code + str(pulsedata[2]) + ','  # add timebase
 
-        _code = _code + str(len(pulsedata[0])) + ','
+        _code = _code + str(len(pulsedata[0]) + 1) + ',0,'
         for pulse in pulsedata[0]:
             _code = _code + str(pulse[0]) + ','
             _code = _code + str(pulse[1]) + ','

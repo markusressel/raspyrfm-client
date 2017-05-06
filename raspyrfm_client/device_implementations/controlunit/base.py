@@ -4,6 +4,7 @@ Base class for all device implementations
 
 import re
 
+from raspyrfm_client.device_implementations.controlunit.actions import Action
 from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
@@ -71,7 +72,7 @@ class Device(object):
         """
         raise NotImplementedError
 
-    def get_pulse_data(self):
+    def get_pulse_data(self, action: Action):
         """
         generates pulse data
         :return: (pulse pairs, repetitions, timebase)

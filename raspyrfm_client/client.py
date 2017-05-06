@@ -252,6 +252,15 @@ class RaspyRFMClient:
         """
         return self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer].keys()
 
+    def list_supported_gateways(self) -> None:
+        """
+        Prints an indented list of all supported manufacturers and models
+        """
+        for manufacturer in self._GATEWAY_IMPLEMENTATIONS_DICT:
+            print(manufacturer.value)
+            for model in self._GATEWAY_IMPLEMENTATIONS_DICT[manufacturer].keys():
+                print("  " + model.value)
+
     def list_supported_controlunits(self) -> None:
         """
         Prints an indented list of all supported manufacturers and models
