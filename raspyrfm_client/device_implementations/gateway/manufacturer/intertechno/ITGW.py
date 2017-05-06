@@ -1,13 +1,15 @@
+from raspyrfm_client.device_implementations.controlunit.actions import Action
 from raspyrfm_client.device_implementations.controlunit.base import Device
 from raspyrfm_client.device_implementations.gateway.base import Gateway
 
 
 class ITGW(Gateway):
     def __init__(self):
-        from raspyrfm_client.device_implementations.gateway.manufacturer import gateway_constants
-        super(gateway_constants.ITGW)
+        from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
+        from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
+        super().__init__(Manufacturer.INTERTECHNO, GatewayModel.ITGW)
 
-    def generate_code(self, device: Device, action: str) -> str:
+    def generate_code(self, device: Device, action: Action) -> str:
         """
         This method can be implemented by inheriting classes if it does not implement get_pulse_data
         :param device: The device to generate the code for
@@ -17,7 +19,7 @@ class ITGW(Gateway):
         if device.get_channel_config() is None:
             raise ValueError("Missing channel configuration :(")
         if action not in device.get_supported_actions():
-            raise ValueError("Unsupported action: " + action)
+            raise ValueError("Unsupported action: " + str(action))
 
         pulsedata = device.get_pulse_data(action)
         _head_connair = "TXP:0,0,"
