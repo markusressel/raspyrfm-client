@@ -4,7 +4,6 @@ Base class for all device implementations
 
 import re
 
-from raspyrfm_client.device_implementations.controlunit.actions import Action
 from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
@@ -78,28 +77,3 @@ class Device(object):
         :return: (pulse pairs, repetitions, timebase)
         """
         raise NotImplementedError
-
-    # obsolete as soon as a different layer generations code from pulse_data
-    def generate_code(self, action: Action) -> str:
-        """
-        This method can be implemented by inheriting classes if it does not implement get_pulse_data
-        :param action: action to execute
-        :return: signal code
-        """
-        if self.get_channel_config() is None:
-            raise ValueError("Missing channel configuration :(")
-        if action not in self.get_supported_actions():
-            raise ValueError("Unsupported action: " + action.value)
-
-        pulsedata = self.get_pulse_data(action)
-        _head_connair = "TXP:0,0,"
-        _code = _head_connair
-        _code = _code + str(pulsedata[1]) + ','  # add repetitions
-        _code = _code + str(5600) + ','
-        _code = _code + str(pulsedata[2]) + ','  # add timebase
-
-        _code = _code + str(len(pulsedata[0])) + ','
-        for pulse in pulsedata[0]:
-            _code = _code + str(pulse[0]) + ','
-            _code = _code + str(pulse[1]) + ','
-        return _code[:-1]

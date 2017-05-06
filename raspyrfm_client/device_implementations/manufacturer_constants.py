@@ -32,6 +32,10 @@ class Manufacturer(Enum):
 
     REV = "REV"
 
+    SEEGEL_SYSTEME = "Seegel Systeme"
+
+    SIMPLE_SOLUTIONS = "Simple Solutions"
+
     UNIVERSAL = "Universal"
 
     VIVANCO = "Vivanco"

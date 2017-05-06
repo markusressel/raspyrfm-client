@@ -4,7 +4,7 @@ from raspyrfm_client.device_implementations.controlunit.controlunit_constants im
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
 rfm_client = RaspyRFMClient("192.168.2.10")
-rfm_client.list_supported_devices()
+rfm_client.list_supported_controlunits()
 
 brennenstuhl_rcs1000 = rfm_client.get_device(Manufacturer.BRENNENSTUHL,
                                              ControlUnitModel.RCS_1000_N_COMFORT)

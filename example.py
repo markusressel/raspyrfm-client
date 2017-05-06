@@ -6,7 +6,7 @@ rfm_client = RaspyRFMClient("192.168.2.10")
 # rfm_client = RaspyRFMClient()
 # print(rfm_client.search())
 
-rfm_client.list_supported_devices()
+rfm_client.list_supported_controlunits()
 
 print("Host: " + str(rfm_client.get_host()))
 print("Port: " + str(rfm_client.get_port()))

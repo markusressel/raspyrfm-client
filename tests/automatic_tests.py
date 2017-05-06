@@ -3,6 +3,8 @@ from builtins import print
 
 import rstr
 from raspyrfm_client import RaspyRFMClient
+from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
+from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
 
 class TestStringMethods(unittest.TestCase):
@@ -37,19 +39,22 @@ class TestStringMethods(unittest.TestCase):
 
                 device.set_channel_config(**channel_config)
 
+                # create gateway instance
+                gateway = rfm_client.get_gateway(Manufacturer.INTERTECHNO, GatewayModel.ITGW)
+
                 for action in device.get_supported_actions():
-                    generated_code = device.generate_code(action)
+                    generated_code = gateway.generate_code(device, action)
                     self.assertIsNotNone(generated_code)
 
-        def test_models(manufacturer_name: str):
+        def test_models(manufacturer: Manufacturer):
             """
             Tests all models of the specified manufacturer
             
-            :param manufacturer_name:  name of the manufacturer to test all available models
+            :param manufacturer:  manufacturer to test all available models
             """
-            for model in rfm_client.get_supported_models(manufacturer_name):
+            for model in rfm_client.get_supported_models(manufacturer):
                 print("Testing " + model.value)
-                device = rfm_client.get_device(manufacturer_name, model)
+                device = rfm_client.get_device(manufacturer, model)
                 test_device(device)
 
         for manufacturer in rfm_client.get_supported_manufacturers():
