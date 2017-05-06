@@ -4,7 +4,10 @@ Example usage of the RaspyRFMClient can be found in the example.py file
 import socket
 from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
 
-from raspyrfm_client.device.base import Device
+from raspyrfm_client.device_implementations.controlunit.actions import Action
+from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
+from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
 
 class RaspyRFMClient:
@@ -39,9 +42,9 @@ class RaspyRFMClient:
 
     def reload_device_implementations(self) -> None:
         """
-        Finds device implementations in the "raspyrfm_client.device.manufacturer" package.
+        Finds device_implementations implementations in the "raspyrfm_client.device_implementations.manufacturer" package.
         This works by recursively searching through supbackages and finding classes that have
-        the device base class (base.py) as a superclass.
+        the device_implementations base class (base.py) as a superclass.
         """
 
         self._DEVICE_IMPLEMENTATIONS_DICT = {}
@@ -84,7 +87,7 @@ class RaspyRFMClient:
 
             return all_subclasses
 
-        from raspyrfm_client.device import manufacturer
+        from raspyrfm_client.device_implementations.controlunit import manufacturer
         import_submodules(manufacturer)
 
         for device_implementation in get_all_subclasses(Device):
@@ -181,12 +184,12 @@ class RaspyRFMClient:
         """
         return self._firmware_version
 
-    def get_device(self, manufacturer: str, model: str) -> Device:
+    def get_device(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
         """
-        Use this method to get a device implementation intance
-        :param manufacturer: device manufacturer name
-        :param model: device model name
-        :return: device implementation
+        Use this method to get a device_implementations implementation intance
+        :param manufacturer: device_implementations manufacturer name
+        :param model: device_implementations model name
+        :return: device_implementations implementation
         """
         return self._DEVICE_IMPLEMENTATIONS_DICT[manufacturer][model]()
 
@@ -196,7 +199,7 @@ class RaspyRFMClient:
         """
         return self._DEVICE_IMPLEMENTATIONS_DICT.keys()
 
-    def get_supported_models(self, manufacturer: str) -> [str]:
+    def get_supported_models(self, manufacturer: Manufacturer) -> [ControlUnitModel]:
         """
         :param manufacturer: supported manufacturer name
         :return: a list of supported model names for this manufacturer
@@ -208,17 +211,17 @@ class RaspyRFMClient:
         Prints an indented list of all supported manufacturers and models
         """
         for manufacturer in self._DEVICE_IMPLEMENTATIONS_DICT:
-            print(manufacturer)
+            print(manufacturer.value)
             for model in self._DEVICE_IMPLEMENTATIONS_DICT[manufacturer].keys():
-                print("  " + model)
+                print("  " + model.value)
 
-    def send(self, device: Device, action: str) -> None:
+    def send(self, device: Device, action: Action) -> None:
         """
-        Use this method to generate codes for actions on supported devices.
+        Use this method to generate codes for actions on supported device_implementations.
         It will generates a string that can be interpreted by the the RaspyRFM module.
         The string contains information about the rc signal that should be sent.
 
-        :param device: the device
+        :param device: the device_implementations
         :param action: action to execute
         """
 

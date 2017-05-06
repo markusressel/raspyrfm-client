@@ -1,26 +1,25 @@
 import unittest
-
-import rstr
 from builtins import print
 
+import rstr
 from raspyrfm_client import RaspyRFMClient
 
 
 class TestStringMethods(unittest.TestCase):
     def test_random_config(self):
         """
-        Tests all devices with random configurations.
+        Tests all device_implementations with random configurations.
         """
 
         rfm_client = RaspyRFMClient()
 
-        from raspyrfm_client.device.base import Device
+        from raspyrfm_client.device_implementations.controlunit.base import Device
 
         def test_device(device: Device):
             """
-            Tests random device configurations for the specified device
+            Tests random device_implementations configurations for the specified device_implementations
             
-            :param device: the device to test 
+            :param device: the device_implementations to test 
             """
 
             self.assertIsNotNone(device.get_manufacturer())
@@ -49,14 +48,14 @@ class TestStringMethods(unittest.TestCase):
             :param manufacturer_name:  name of the manufacturer to test all available models
             """
             for model in rfm_client.get_supported_models(manufacturer_name):
-                print("Testing " + model)
+                print("Testing " + model.value)
                 device = rfm_client.get_device(manufacturer_name, model)
                 test_device(device)
 
         for manufacturer in rfm_client.get_supported_manufacturers():
             test_models(manufacturer)
 
-        print("All random config device tests passed!")
+        print("All random config device_implementations tests passed!")
 
 
 if __name__ == '__main__':
