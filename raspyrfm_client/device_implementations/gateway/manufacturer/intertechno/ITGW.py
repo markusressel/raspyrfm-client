@@ -10,7 +10,7 @@ class ITGW(Gateway):
     def generate_code(self, device: Device, action: str) -> str:
         """
         This method can be implemented by inheriting classes if it does not implement get_pulse_data
-        :param device: The device_implementations to generate the code for
+        :param device: The device to generate the code for
         :param action: action to execute
         :return: signal code
         """

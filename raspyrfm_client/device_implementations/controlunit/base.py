@@ -23,13 +23,13 @@ class Device(object):
 
     def get_manufacturer(self) -> Manufacturer:
         """
-        :return: the device_implementations manufacturer
+        :return: the device manufacturer
         """
         return self._manufacturer
 
     def get_model(self) -> ControlUnitModel:
         """
-        :return: the device_implementations model
+        :return: the device model
         """
         return self._model
 
@@ -68,7 +68,7 @@ class Device(object):
 
     def get_supported_actions(self) -> [str]:
         """
-        :return: the supported actions of this device_implementations
+        :return: the supported actions of this device
         """
         raise NotImplementedError
 

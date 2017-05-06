@@ -42,9 +42,9 @@ class RaspyRFMClient:
 
     def reload_device_implementations(self) -> None:
         """
-        Finds device_implementations implementations in the "raspyrfm_client.device_implementations.manufacturer" package.
+        Finds device implementations in the "raspyrfm_client.device_implementations.manufacturer" package.
         This works by recursively searching through supbackages and finding classes that have
-        the device_implementations base class (base.py) as a superclass.
+        the device base class (base.py) as a superclass.
         """
 
         self._DEVICE_IMPLEMENTATIONS_DICT = {}
@@ -186,10 +186,10 @@ class RaspyRFMClient:
 
     def get_device(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
         """
-        Use this method to get a device_implementations implementation intance
-        :param manufacturer: device_implementations manufacturer name
-        :param model: device_implementations model name
-        :return: device_implementations implementation
+        Use this method to get a device implementation intance
+        :param manufacturer: device manufacturer
+        :param model: device model
+        :return: device implementation
         """
         return self._DEVICE_IMPLEMENTATIONS_DICT[manufacturer][model]()
 
@@ -217,11 +217,11 @@ class RaspyRFMClient:
 
     def send(self, device: Device, action: Action) -> None:
         """
-        Use this method to generate codes for actions on supported device_implementations.
+        Use this method to generate codes for actions on supported device.
         It will generates a string that can be interpreted by the the RaspyRFM module.
         The string contains information about the rc signal that should be sent.
 
-        :param device: the device_implementations
+        :param device: the device
         :param action: action to execute
         """
 

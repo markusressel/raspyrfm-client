@@ -15,5 +15,5 @@ class AB440ID(AB440S):
             '3': '^[01]$',
             '4': '^[01]$',
             '5': '^[01]$',
-            'CH': '^[A-C]$'  # device_implementations as only switches A-C
+            'CH': '^[A-C]$'  # device has only switches A-C
         }
