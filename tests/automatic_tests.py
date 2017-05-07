@@ -52,12 +52,12 @@ class TestStringMethods(unittest.TestCase):
             
             :param manufacturer:  manufacturer to test all available models
             """
-            for model in rfm_client.get_supported_models(manufacturer):
+            for model in rfm_client.get_supported_controlunit_models(manufacturer):
                 print("Testing " + model.value)
                 device = rfm_client.get_device(manufacturer, model)
                 test_device(device)
 
-        for manufacturer in rfm_client.get_supported_manufacturers():
+        for manufacturer in rfm_client.get_supported_controlunit_manufacturers():
             test_models(manufacturer)
 
         print("All random config device_implementations tests passed!")

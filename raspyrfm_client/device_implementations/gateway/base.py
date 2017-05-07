@@ -52,5 +52,20 @@ class Gateway(object):
         """
         return self._port
 
+    def get_search_response_regex_literal(self) -> str:
+        """
+        :return: a regular expression that matches the response to a "search" broadcast 
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    def create_from_broadcast(host: str, message: str):
+        """
+        :param host: the host that sent the message
+        :param message: the search response message
+        :return: a new instance of this gateway based on a broadcast response message
+        """
+        raise NotImplementedError
+
     def generate_code(self, device: Device, action: Action) -> str:
         raise NotImplementedError

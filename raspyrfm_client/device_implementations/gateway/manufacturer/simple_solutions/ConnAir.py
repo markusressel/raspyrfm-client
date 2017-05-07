@@ -4,10 +4,26 @@ from raspyrfm_client.device_implementations.gateway.base import Gateway
 
 
 class ConnAir(Gateway):
+
     def __init__(self, host: str = None, port: int = 49880):
         from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
         from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
         super().__init__(Manufacturer.SIMPLE_SOLUTIONS, GatewayModel.CONNAIR, host, port)
+
+    @staticmethod
+    def create_from_broadcast(host: str, message: str):
+        # manufacturer = message[message.index('VC:') + 3:message.index(';MC')]
+        # model = message[message.index('MC:') + 3:message.index(';FW')]
+        firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
+        # parsed_host = message[message.index('IP:') + 3:message.index(';;')]
+
+        instance = ConnAir(host)
+        instance._firmware_version = firmware_version
+
+        return instance
+
+    def get_search_response_regex_literal(self) -> str:
+        return "HCGW:.*VC:Simple Solutions;MC:.*;FW:.+;IP:.+;;"
 
     def generate_code(self, device: Device, action: Action) -> str:
         """

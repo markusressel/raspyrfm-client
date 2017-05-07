@@ -2,7 +2,6 @@
 Example usage of the RaspyRFMClient can be found in the example.py file
 """
 import socket
-from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
 
 from raspyrfm_client.device_implementations.controlunit.actions import Action
 from raspyrfm_client.device_implementations.controlunit.base import Device
@@ -23,8 +22,6 @@ class RaspyRFMClient:
     """
     _GATEWAY_IMPLEMENTATIONS_DICT = {}
     _CONTROLUNIT_IMPLEMENTATIONS_DICT = {}
-
-    _broadcast_message = b'SEARCH HCGW'
 
     def __init__(self):
         """
@@ -130,60 +127,23 @@ class RaspyRFMClient:
 
             self._CONTROLUNIT_IMPLEMENTATIONS_DICT[brand][model] = device_implementation
 
-    def search(self) -> str or None:
+    def get_supported_gateway_manufacturers(self):
         """
-        Sends a local network broadcast with a specified message.
-        If a gateway is present it will respond to this broadcast.
-
-        If a valid response is found the properties of this client object will be updated accordingly.
-
-        :return: ip of the detected gateway
+        :return: a list of supported gateway manufacturers
         """
-        cs = socket.socket(AF_INET, SOCK_DGRAM)
-        cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-        cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        return self._GATEWAY_IMPLEMENTATIONS_DICT.keys()
 
-        cs.sendto(self._broadcast_message, ('255.255.255.255', 49880))
-
-        cs.setblocking(True)
-        cs.settimeout(1)
-
-        try:
-            data, address = cs.recvfrom(4096)
-            print("Received message: \"%s\"" % data)
-            print("Address: " + address[0])
-
-            message = data.decode()
-
-            # abort if response is invalid
-            if not message.startswith('HCGW:'):
-                print("Invalid response")
-                return None
-
-            # RaspyRFM response:
-            # "HCGW:VC:Seegel Systeme;MC:RaspyRFM;FW:1.00;IP:192.168.2.124;;"
-
-            # try to parse data if valid
-            _manufacturer = message[message.index('VC:') + 3:message.index(';MC')]
-            _model = message[message.index('MC:') + 3:message.index(';FW')]
-            _firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
-            parsed_host = message[message.index('IP:') + 3:message.index(';;')]
-
-            if self._host is None:
-                if parsed_host != address[0]:
-                    self._host = address[0]
-                else:
-                    self._host = parsed_host
-
-            return parsed_host
-
-        except socket.timeout:
-            return None
+    def get_supported_gateway_models(self, manufacturer: Manufacturer) -> [GatewayModel]:
+        """
+        :param manufacturer: supported gateway manufacturer
+        :return: a list of supported gateway models for this gateway manufacturer
+        """
+        return self._GATEWAY_IMPLEMENTATIONS_DICT[manufacturer].keys()
 
     def get_gateway(self, manufacturer: Manufacturer, model: GatewayModel, host: str = None,
                     port: int = None) -> Gateway:
         """
-        Use this method to get a gateway implementation intance
+        Use this method to get a gateway implementation instance
         :param manufacturer: gateway manufacturer
         :param model: gateway model
         :param host: gateway host address (optional)
@@ -191,6 +151,19 @@ class RaspyRFMClient:
         :return: gateway implementation
         """
         return self._GATEWAY_IMPLEMENTATIONS_DICT[manufacturer][model](host, port)
+
+    def get_supported_controlunit_manufacturers(self) -> [str]:
+        """
+        :return: a list of supported control unit manufacturers
+        """
+        return self._CONTROLUNIT_IMPLEMENTATIONS_DICT.keys()
+
+    def get_supported_controlunit_models(self, manufacturer: Manufacturer) -> [ControlUnitModel]:
+        """
+        :param manufacturer: supported control unit manufacturer
+        :return: a list of supported control unit models for this manufacturer
+        """
+        return self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer].keys()
 
     def get_device(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
         """
@@ -200,19 +173,6 @@ class RaspyRFMClient:
         :return: device implementation
         """
         return self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer][model]()
-
-    def get_supported_manufacturers(self) -> [str]:
-        """
-        :return: a list of supported manufacturer names
-        """
-        return self._CONTROLUNIT_IMPLEMENTATIONS_DICT.keys()
-
-    def get_supported_models(self, manufacturer: Manufacturer) -> [ControlUnitModel]:
-        """
-        :param manufacturer: supported manufacturer name
-        :return: a list of supported model names for this manufacturer
-        """
-        return self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer].keys()
 
     def list_supported_gateways(self) -> None:
         """
@@ -231,6 +191,60 @@ class RaspyRFMClient:
             print(manufacturer.value)
             for model in self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer].keys():
                 print("  " + model.value)
+
+    def search(self) -> [Gateway]:
+        """
+        Sends a local network broadcast with a specified message.
+        If a gateway is present it will respond to this broadcast.
+
+        If a valid response is found the properties of this client object will be updated accordingly.
+
+        :return: list of gateways
+        """
+
+        import re
+        import socket
+        from socket import AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
+
+        found_gateways = []
+        all_gateways = []
+
+        # get all gateway implementations in a list
+        for manufacturer in self.get_supported_gateway_manufacturers():
+            for model in self.get_supported_gateway_models(manufacturer):
+                all_gateways.append(self.get_gateway(manufacturer, model))
+
+        # send the broadcast
+        cs = socket.socket(AF_INET, SOCK_DGRAM)
+        cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+        cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+
+        _broadcast_message = b'SEARCH HCGW'
+
+        cs.sendto(_broadcast_message, ('255.255.255.255', 49880))
+
+        cs.setblocking(True)
+        cs.settimeout(1)
+
+        # receive the message(s)
+        try:
+            while True:
+                data, address = cs.recvfrom(4096)
+                # print("Received message: \"%s\"" % data)
+                # print("Address: " + address[0])
+
+                message = data.decode()
+
+                # for each device implementation, check if the response matches the expected pattern
+                # and add an instance of this gateway implementation to the found_gateways list
+                for gateway in all_gateways:
+                    if re.match(gateway.get_search_response_regex_literal(), message) is not None:
+                        found_gateways.append(gateway.create_from_broadcast(address[0], message))
+
+        except socket.timeout:
+            return found_gateways
+        finally:
+            return found_gateways
 
     def send(self, gateway: Gateway, device: Device, action: Action) -> None:
         """

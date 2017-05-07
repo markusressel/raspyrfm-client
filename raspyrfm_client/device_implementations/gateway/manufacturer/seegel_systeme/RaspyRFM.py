@@ -9,6 +9,21 @@ class RaspyRFM(Gateway):
         from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
         super().__init__(Manufacturer.SEEGEL_SYSTEME, GatewayModel.RASPYRFM, host, port)
 
+    @staticmethod
+    def create_from_broadcast(host: str, message: str):
+        # manufacturer = message[message.index('VC:') + 3:message.index(';MC')]
+        # model = message[message.index('MC:') + 3:message.index(';FW')]
+        firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
+        # parsed_host = message[message.index('IP:') + 3:message.index(';;')]
+
+        instance = RaspyRFM(host)
+        instance._firmware_version = firmware_version
+
+        return instance
+
+    def get_search_response_regex_literal(self) -> str:
+        return "HCGW:.*VC:Seegel Systeme;MC:RaspyRFM;FW:.+;IP:.+;;"
+
     def generate_code(self, device: Device, action: Action) -> str:
         """
         This method can be implemented by inheriting classes if it does not implement get_pulse_data
