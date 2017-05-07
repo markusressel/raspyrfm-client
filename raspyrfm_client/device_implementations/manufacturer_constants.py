@@ -41,3 +41,5 @@ class Manufacturer(Enum):
     VIVANCO = "Vivanco"
 
     WESTFALIA = "Westfalia"
+
+    YourManufacturer = "YourManufacturer"

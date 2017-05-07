@@ -1,5 +1,5 @@
 from raspyrfm_client.device_implementations.controlunit.actions import Action
-from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
@@ -67,5 +67,5 @@ class Gateway(object):
         """
         raise NotImplementedError
 
-    def generate_code(self, device: Device, action: Action) -> str:
+    def generate_code(self, device: ControlUnit, action: Action) -> str:
         raise NotImplementedError

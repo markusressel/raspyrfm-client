@@ -1,5 +1,5 @@
 """
-Base class for all device implementations
+Base class for all controlunit implementations
 """
 
 import re
@@ -9,7 +9,7 @@ from raspyrfm_client.device_implementations.controlunit.controlunit_constants im
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
 
-class Device(object):
+class ControlUnit(object):
     def __init__(self, manufacturer: Manufacturer, model: ControlUnitModel):
         self._manufacturer = manufacturer
         self._model = model

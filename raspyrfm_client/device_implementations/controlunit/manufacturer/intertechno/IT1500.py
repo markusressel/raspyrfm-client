@@ -1,8 +1,8 @@
 from raspyrfm_client.device_implementations.controlunit.actions import Action
-from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 
 
-class IT1500(Device):
+class IT1500(ControlUnit):
     _repetitions = 6
     _timebase = 275
     _pausedata = 5600  # not really needed, just for keeping reenginering data

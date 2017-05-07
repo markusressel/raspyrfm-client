@@ -189,11 +189,11 @@ The :code:`raspyrfm-client` library is designed so you can implement custom devi
 
 File Structure
 --------------
-All device implementations are located in the :code:`/device/manufacturers/` module and implement the base class :code:`Device` that can be found in :code:`/device/base.py`.
+All :code:`ControlUnit` implementations are located in the :code:`/device_implementations/controlunit/manufacturer/` module and implement the base class :code:`Device` that can be found in :code:`/device_implementations/controlunit//base.py`.
 
-Create a new Device
--------------------
-To create a new device implementation for a new manufacturer and model create a new subdirectory for your manufacturer and a python file for your model:
+Create a new :code:`ControlUnit`
+--------------------------------
+To create a new :code:`ControlUnit` implementation for a new manufacturer and model create a new subdirectory for your manufacturer and a python file for your model:
 
 .. code-block::
 
@@ -221,43 +221,56 @@ To create a new device implementation for a new manufacturer and model create a 
     │                   yourmodel.py
     ──────────────────────────────────────────
 
-Implement a Device
-------------------
+Implement a :code:`ControlUnit`
+-------------------------------
 
-Now the basic implementation of your device looks like this:
+Now the basic implementation of your :code:`ControlUnit` should looks like this:
 
 .. code-block:: python
 
-    from raspyrfm_client.device import actions
-    from raspyrfm_client.device.base import Device
+    from raspyrfm_client.device_implementations.controlunit.actions import Action
+    from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 
 
-    class YourModel(Device):
-
+    class YourModel(ControlUnit):
         def __init__(self):
-            from raspyrfm_client.device.manufacturer import manufacturer_constants
-            super(YourModel, self).__init__(manufacturer_constants.YOUR_MANUFACTURER, manufacturer_constants.YOUR_MODEL)
+            from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
+            from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
+            super().__init__(Manufacturer.YourManufacturer, ControlUnitModel.YourModel)
 
+        def get_channel_config_args(self):
+            return {}
 
-        def set_channel_config(self, **channel_arguments) -> None:
-            pass
+        def get_pulse_data(self, action: Action):
+            return [[0, 0], [0, 0]], 0, 0
 
         def get_supported_actions(self) -> [str]:
-            return [actions.ON]
+            return [Action.ON]
 
-        def generate_code(self, action: str) -> str:
-            pass
 
-Most importantly you have to call the :code:`super().__init__` method like shown. This will ensure that your implementation is found by the :code:`RaspyRFMClient` and you can get an instance of your device using :code:`rfm_client.get_device()` as shown before.
+Most importantly you have to call the :code:`super().__init__` method like shown. This will ensure that your implementation is found by the :code:`RaspyRFMClient` and you can get an instance of your device using :code:`rfm_client.get_controlunit()` as shown before.
 
-If your manufacturer does not exist yet **create a new constant** in the :code:`manufacturer_constants.py` file and use its value in your :code:`__init__`.
-**Do the same thing for your model name.**
+If your manufacturer does not exist yet **create a new enum constant** in the :code:`manufacturer_constants.py` file and use its value in your :code:`__init__`.
+**Do the same thing for your model name** in the :code:`controlunit_constants.py` file.
 
-You also have to implement all abstract methods from the :code:`Device` class. Have a look at its documentation to get a sense of what those methods are all about.
+You also have to implement all abstract methods from the :code:`Device` class. Have a look at it's documentation to get a sense of what those methods are all about.
 
 After you have implemented all methods you are good to go!
-Just call :code:`rfm_client.reload_device_implementations()` and :code:`rfm_client.list_supported_devices()` to check if your implementation is listed.
+Just call :code:`rfm_client.reload_implementation_classes()` and :code:`rfm_client.list_supported_controlunits()` to check if your implementation is listed.
 If everything looks good you can use your implementation like any other one.
+
+
+
+Exclude a WIP implementation
+----------------------------
+To prevent the RaspyRFM client from importing your half baked implementation just include a class field like this:
+
+.. code-block:: python
+
+   class YourModel(ControlUnit):
+      DISABLED = True
+
+      [...]
 
 Contributing
 ============

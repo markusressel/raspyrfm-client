@@ -1,8 +1,8 @@
 from raspyrfm_client.device_implementations.controlunit.actions import Action
-from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 
 
-class Ec000x(Device):
+class Ec000x(ControlUnit):
     _on = ['0', '1']
     _off = ['1', '0']
 

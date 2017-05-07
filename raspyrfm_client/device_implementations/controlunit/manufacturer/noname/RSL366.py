@@ -10,7 +10,8 @@ class RSL366(HX2262Compatible):
     from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
     from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
 
-    def __init__(self, manufacturer: str = Manufacturer.NONAME, model: str = ControlUnitModel.RSL366):
+    def __init__(self, manufacturer: Manufacturer = Manufacturer.NONAME,
+                 model: ControlUnitModel = ControlUnitModel.RSL366):
         super().__init__(manufacturer, model)
 
     def get_supported_actions(self) -> [Action]:

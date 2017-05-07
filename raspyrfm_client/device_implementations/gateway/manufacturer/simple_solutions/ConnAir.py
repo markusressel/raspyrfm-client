@@ -1,5 +1,5 @@
 from raspyrfm_client.device_implementations.controlunit.actions import Action
-from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 from raspyrfm_client.device_implementations.gateway.base import Gateway
 
 
@@ -25,7 +25,7 @@ class ConnAir(Gateway):
     def get_search_response_regex_literal(self) -> str:
         return "HCGW:.*VC:Simple Solutions;MC:.*;FW:.+;IP:.+;;"
 
-    def generate_code(self, device: Device, action: Action) -> str:
+    def generate_code(self, device: ControlUnit, action: Action) -> str:
         """
         This method can be implemented by inheriting classes if it does not implement get_pulse_data
         :param device: The device to generate the code for

@@ -4,7 +4,7 @@ Example usage of the RaspyRFMClient can be found in the example.py file
 import socket
 
 from raspyrfm_client.device_implementations.controlunit.actions import Action
-from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
 from raspyrfm_client.device_implementations.gateway.base import Gateway
 from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
@@ -88,13 +88,13 @@ class RaspyRFMClient:
         RaspyRFMClient.__import_submodules(manufacturer)
 
         for gateway_implementation in RaspyRFMClient.__get_all_subclasses(Gateway):
+            # ignore classes that are disabled by the developer
+            if hasattr(gateway_implementation, "DISABLED") and gateway_implementation.DISABLED is True:
+                continue
+
             gateway_instance = gateway_implementation()
             brand = gateway_instance.get_manufacturer()
             model = gateway_instance.get_model()
-
-            # ignore classes that are disabled by the developer
-            if hasattr(gateway_instance, "DISABLED") and gateway_instance.DISABLED is True:
-                continue
 
             if brand not in self._GATEWAY_IMPLEMENTATIONS_DICT:
                 self._GATEWAY_IMPLEMENTATIONS_DICT[brand] = {}
@@ -113,14 +113,14 @@ class RaspyRFMClient:
         from raspyrfm_client.device_implementations.controlunit import manufacturer
         RaspyRFMClient.__import_submodules(manufacturer)
 
-        for device_implementation in RaspyRFMClient.__get_all_subclasses(Device):
+        for device_implementation in RaspyRFMClient.__get_all_subclasses(ControlUnit):
+            # ignore classes that are disabled by the developer
+            if hasattr(device_implementation, "DISABLED") and device_implementation.DISABLED is True:
+                continue
+
             device_instance = device_implementation()
             brand = device_instance.get_manufacturer()
             model = device_instance.get_model()
-
-            # ignore classes that are disabled by the developer
-            if hasattr(device_instance, "DISABLED") and device_instance.DISABLED is True:
-                continue
 
             if brand not in self._CONTROLUNIT_IMPLEMENTATIONS_DICT:
                 self._CONTROLUNIT_IMPLEMENTATIONS_DICT[brand] = {}
@@ -165,7 +165,7 @@ class RaspyRFMClient:
         """
         return self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer].keys()
 
-    def get_controlunit(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
+    def get_controlunit(self, manufacturer: Manufacturer, model: ControlUnitModel) -> ControlUnit:
         """
         Use this method to get a device implementation intance
         :param manufacturer: device manufacturer
@@ -246,7 +246,7 @@ class RaspyRFMClient:
         finally:
             return found_gateways
 
-    def send(self, gateway: Gateway, device: Device, action: Action) -> None:
+    def send(self, gateway: Gateway, device: ControlUnit, action: Action) -> None:
         """
         Use this method to generate codes for actions on supported device.
         It will generates a string that can be interpreted by the the RaspyRFM module.

@@ -15,9 +15,9 @@ class TestStringMethods(unittest.TestCase):
 
         rfm_client = RaspyRFMClient()
 
-        from raspyrfm_client.device_implementations.controlunit.base import Device
+        from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 
-        def test_device(device: Device):
+        def test_device(device: ControlUnit):
             """
             Tests random device_implementations configurations for the specified device_implementations
             

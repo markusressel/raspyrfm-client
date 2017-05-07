@@ -1,8 +1,8 @@
 from raspyrfm_client.device_implementations.controlunit.actions import Action
-from raspyrfm_client.device_implementations.controlunit.base import Device
+from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 
 
-class HX2262Compatible(Device):
+class HX2262Compatible(ControlUnit):
     _sho = 1
     _lon = 3
 
