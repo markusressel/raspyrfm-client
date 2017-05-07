@@ -1,7 +1,7 @@
 raspyrfm-client
 ===============
 
-A python 3.2+ library that allows the generation of network codes for the RaspyRFM rc module.
+A python 3.4+ library that allows the generation of network codes for the RaspyRFM rc module.
 
 Build Status
 ============
@@ -30,48 +30,57 @@ Import required modules
 .. code-block:: python
 
    from raspyrfm_client import RaspyRFMClient
-   from raspyrfm_client.device import actions
-   from raspyrfm_client.device.manufacturer import manufacturer_constants
+   from raspyrfm_client.device_implementations.controlunit.actions import Action
+   from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
+   from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
+   from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
 
 Create the :code:`RaspyRFMClient` object
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you know the :code:`IP` and :code:`Port` of your :code:`RaspyRFM` you can pass them as arguments:
+Get a client instance by calling:
 
-.. code-block:: python
-
-   rfm_client = RaspyRFMClient("192.168.2.10", 9876)
-
-or
-
-.. code-block:: python
-
-   rfm_client = RaspyRFMClient("192.168.2.10") # defaults to port 49880
-
-Otherwise you can just create it without:
 
 .. code-block:: python
 
    rfm_client = RaspyRFMClient()
 
-and then let the client search for the :code:`RaspyRFM` automatically with:
+Create a :code:`Gateway` instance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+You can let the library search automatically for gateways available in LAN using:
 
 .. code-block:: python
 
-   ip = rfm_client.search()
+   gateways = rfm_client.search()
 
-This will return an :code:`IP Address` if a :code:`RaspyRFM` module was found.
+This will return a list of Gateways that can later be used to send signals to.
 
-**WARNING:** currently the search() method only works on linux systems :(
-
-Get a Device
-^^^^^^^^^^^^
-
-To get a quick overview of what **manufacturers** and **models** are supported call:
+To get a quick overview of what gateway **manufacturers** and **models** are supported call:
 
 .. code-block:: python
 
-   rfm_client.list_supported_devices()
+   rfm_client.list_supported_gateways()
+
+Create a gateway instance with the specified :code:`IP` and :code:`Port` of your Gateway by using:
+.. code-block:: python
+
+   gateway = rfm_client.get_gateway(Manufacturer.SEEGEL_SYSTEME, GatewayModel.RASPYRFM, "192.168.2.10", 9876)
+
+or
+
+.. code-block:: python
+
+   gateway = rfm_client.get_gateway(Manufacturer.SEEGEL_SYSTEME, GatewayModel.RASPYRFM, "192.168.2.10") # defaults to 49880 or the gateway implementations default
+
+Get a :code:`ControlUnit`
+^^^^^^^^^^^^^^^^^^^^^^^^^
+ControlUnits are the devices that receive the RC signals sent using the gateway, f.ex. a power outlet.
+
+To get a quick overview of what ControlUnits **manufacturers** and **models** are supported call:
+
+.. code-block:: python
+
+   rfm_client.list_supported_controlunits()
 
 which will give you an indented list of supported manufacturers and their supported models similar to this:
 
@@ -96,21 +105,24 @@ which will give you an indented list of supported manufacturers and their suppor
      Model 1919361
    [...]
 
-**Use the names in this list (or better yet** :code:`manufacturer_constants.py`
-**constants) to get a device in the next step.**
-
 To generate codes for a device **you first have to get an instance of its implementation** like this:
 
 .. code-block:: python
 
-   brennenstuhl_rcs1000 = rfm_client.get_device(manufacturer_constants.BRENNENSTUHL,
+   brennenstuhl_rcs1000 = rfm_client.get_controlunit(manufacturer_constants.BRENNENSTUHL,
                                              manufacturer_constants.RCS_1000_N_COMFORT)
 
-It is always a good idea to **only use values present in** :code:`manufacturer_constants` but if needed you can also pass in a :code:`string`. These however need to always be the same values as the ones printed by the :code:`list_supported_devices()` method.
+The parameters of the :code:`get_controlunit()` method always need to be an enum value of the specified type.
+You can get an enum constant by its name though using:
 
-Channel configuration
-^^^^^^^^^^^^^^^^^^^^^
-Before you can generate codes with your shiny new device implementation you have to specify a channel configuration. These **configurations can be very different for every device**. The best way to know the correct way of specifying the channel configuration for a specific device is to look at the source code (yes I know...) or by trial and error (even worse). A good device implementation should tell you how the device configuration should look like when specifying it wrong.
+.. code-block:: python
+
+   manufacturer = Manufacturer("Intertechno")
+   model = ControlUnitModel("IT-1500")
+
+:code:`ControlUnit` channel configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Before you can generate codes with your shiny new gateway and :code:`ControlUnit` implementations you have to specify a channel configuration for your :code:`ControlUnit`. These **configurations can be very different for every device**. The best way to know the correct way of specifying the channel configuration for a specific device is to look at the source code (yes I know...) or by trial and error (even worse). A good :code:`ControlUnit` implementation should tell you how the configuration should look like when specifying it in a wrong way.
 
 However all configurations are a **keyed dictionary**.
 So in general there are two ways of passing the channel configuration argument.
@@ -131,7 +143,7 @@ Two (as a dictionary):
 
 **Note** that the **keys always need to be a** :code:`string`.
 
-For our brennenstuhl device it would look like this:
+For our Brennenstuhl device it would look like this:
 
 .. code-block:: python
 
@@ -141,38 +153,34 @@ For our brennenstuhl device it would look like this:
         '3': True,
         '4': True,
         '5': True,
-        'A': True,
-        'B': False,
-        'C': False,
-        'D': False,
-        'E': False
+        'CH': 'A'
     })
 
 Generate action codes
 ^^^^^^^^^^^^^^^^^^^^^
-Now that you have an implementation instance you can generate codes for supported actions by using an :code:`actions` constant that you imported previously.
+Now that you have a properly set up :code:`ControlUnit` you can generate codes for it's supported actions by using an :code:`Action` enum constant that you imported previously.
 
-To get a list of supported actions for a device call:
+To get a list of supported actions for a :code:`ControlUnit`call:
 
 .. code-block:: python
 
    brennenstuhl_rcs1000.get_supported_actions()
 
-and generate a code for one of them with:
+and generate a code for one of them using your :code:`Gateway` instance:
 
 .. code-block:: python
 
-   code = brennenstuhl_rcs1000.generate_code(actions.ON)
+   code = gateway.generate_code(brennenstuhl_rcs1000, Action.ON)
 
 Send the code to the :code:`RaspyRFM` module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-To send a code for your device of choice you can combine the two objects in this call:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To send a code for your device of choice you can combine the objects in this call:
 
 .. code-block:: python
 
-   rfm_client.send(brennenstuhl_rcs1000, actions.ON)
+   rfm_client.send(gateway, brennenstuhl_rcs1000, actions.ON)
 
-Note that this will only work if you specified an :code:`IP` manually or the :code:`search()` method has found your :code:`RaspyRFM` module.
+This will generate a code specific to the passed in gateway implementation and send it to it's host address immediately after.
 
 Custom implementations
 ======================

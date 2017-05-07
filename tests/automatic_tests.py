@@ -54,7 +54,7 @@ class TestStringMethods(unittest.TestCase):
             """
             for model in rfm_client.get_supported_controlunit_models(manufacturer):
                 print("Testing " + model.value)
-                device = rfm_client.get_device(manufacturer, model)
+                device = rfm_client.get_controlunit(manufacturer, model)
                 test_device(device)
 
         for manufacturer in rfm_client.get_supported_controlunit_manufacturers():

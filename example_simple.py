@@ -17,8 +17,8 @@ rfm_client.list_supported_controlunits()
 raspyrfm = rfm_client.get_gateway(Manufacturer.SEEGEL_SYSTEME, GatewayModel.RASPYRFM, "192.168.2.10")
 itgw = rfm_client.get_gateway(Manufacturer.INTERTECHNO, GatewayModel.ITGW, "192.168.2.70")
 
-brennenstuhl_rcs1000 = rfm_client.get_device(Manufacturer.BRENNENSTUHL,
-                                             ControlUnitModel.RCS_1000_N_COMFORT)
+brennenstuhl_rcs1000 = rfm_client.get_controlunit(Manufacturer.BRENNENSTUHL,
+                                                  ControlUnitModel.RCS_1000_N_COMFORT)
 brennenstuhl_rcs1000.set_channel_config(**{
     '1': 1,
     '2': 1,
@@ -35,8 +35,8 @@ print(itgw.generate_code(brennenstuhl_rcs1000, Action.ON))
 
 print("")
 
-bat = rfm_client.get_device(Manufacturer.BAT,
-                            ControlUnitModel.RC3500_A_IP44_DE)
+bat = rfm_client.get_controlunit(Manufacturer.BAT,
+                                 ControlUnitModel.RC3500_A_IP44_DE)
 bat.set_channel_config(**{
     '1': 1,
     '2': 1,
@@ -51,10 +51,14 @@ print(itgw.generate_code(bat, Action.ON))
 
 # rfm_client.send(itgw, brennenstuhl_rcs1000, Action.ON)
 
-cmr1000 = rfm_client.get_device(Manufacturer.INTERTECHNO, ControlUnitModel.CMR_1000)
+
+manufacturer = Manufacturer("Intertechno")
+model = ControlUnitModel("CMR 1000")
+
+cmr1000 = rfm_client.get_controlunit(manufacturer, model)
 cmr1000.set_channel_config(**{
     "master": 'B',
     "slave": 1
 })
 
-rfm_client.send(itgw, cmr1000, Action.ON)
+rfm_client.send(itgw, cmr1000, Action.OFF)

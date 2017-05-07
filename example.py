@@ -17,8 +17,8 @@ print("Firmware: " + str(rfm_client.get_firmware_version()))
 """ Brennenstuhl """
 print("")
 
-brennenstuhl_rcs1000 = rfm_client.get_device(controlunit_constants.BRENNENSTUHL,
-                                             controlunit_constants.RCS_1000_N_COMFORT)
+brennenstuhl_rcs1000 = rfm_client.get_controlunit(controlunit_constants.BRENNENSTUHL,
+                                                  controlunit_constants.RCS_1000_N_COMFORT)
 brennenstuhl_rcs1000.set_channel_config(**{
     '1': 1,
     '2': 1,
@@ -37,7 +37,7 @@ rfm_client.send(brennenstuhl_rcs1000, actions.ON)
 """ Elro """
 print("")
 
-elro_ab440id = rfm_client.get_device(controlunit_constants.ELRO, controlunit_constants.AB440ID)
+elro_ab440id = rfm_client.get_controlunit(controlunit_constants.ELRO, controlunit_constants.AB440ID)
 
 elro_ab440id.set_channel_config(**{
     '1': 0,
@@ -54,7 +54,7 @@ print(elro_ab440id.generate_code(actions.ON))
 print(elro_ab440id.generate_code(actions.OFF))
 
 print("")
-elro_ab440s = rfm_client.get_device(controlunit_constants.ELRO, controlunit_constants.AB440S)
+elro_ab440s = rfm_client.get_controlunit(controlunit_constants.ELRO, controlunit_constants.AB440S)
 
 elro_ab440s.set_channel_config(**{
     '1': 0,
@@ -73,7 +73,7 @@ print(elro_ab440s.generate_code(actions.OFF))
 """ rev """
 print("")
 
-rev_telecontrol = rfm_client.get_device(controlunit_constants.REV, controlunit_constants.TELECONTROL8342C)
+rev_telecontrol = rfm_client.get_controlunit(controlunit_constants.REV, controlunit_constants.TELECONTROL8342C)
 
 rev_telecontrol.set_channel_config(master='A', slave=1)
 
@@ -86,7 +86,7 @@ rfm_client.send(rev_telecontrol, actions.ON)
 
 print("")
 
-rev_ritter = rfm_client.get_device(controlunit_constants.REV, controlunit_constants.RITTER)
+rev_ritter = rfm_client.get_controlunit(controlunit_constants.REV, controlunit_constants.RITTER)
 
 rev_ritter.set_channel_config(**{
     '1': 0,
@@ -105,7 +105,7 @@ print(rev_ritter.generate_code(actions.ON))
 """ intertechno """
 print("")
 
-intertechno_cmr_1000 = rfm_client.get_device(controlunit_constants.INTERTECHNO, controlunit_constants.CMR_1000)
+intertechno_cmr_1000 = rfm_client.get_controlunit(controlunit_constants.INTERTECHNO, controlunit_constants.CMR_1000)
 
 intertechno_cmr_1000.set_channel_config(master='A', slave=1)
 
@@ -120,7 +120,7 @@ print(intertechno_cmr_1000.generate_code(actions.OFF))
 
 print("")
 
-intertechno_cmr_500 = rfm_client.get_device(controlunit_constants.INTERTECHNO, controlunit_constants.CMR_500)
+intertechno_cmr_500 = rfm_client.get_controlunit(controlunit_constants.INTERTECHNO, controlunit_constants.CMR_500)
 
 intertechno_cmr_500.set_channel_config(master='A', slave=1)
 
@@ -131,7 +131,7 @@ print(intertechno_cmr_500.generate_code(actions.OFF))
 
 """ Intertek """
 print("")
-intertek = rfm_client.get_device(controlunit_constants.INTERTEK, controlunit_constants.MODEL_1919361)
+intertek = rfm_client.get_controlunit(controlunit_constants.INTERTEK, controlunit_constants.MODEL_1919361)
 
 intertek.set_channel_config(**{
     '1': 0,
@@ -149,7 +149,7 @@ print(intertek.generate_code(actions.OFF))
 
 """ Intertechno ITS-150 """
 print("")
-its150 = rfm_client.get_device(controlunit_constants.INTERTECHNO, controlunit_constants.ITS_150)
+its150 = rfm_client.get_controlunit(controlunit_constants.INTERTECHNO, controlunit_constants.ITS_150)
 
 its150.set_channel_config(**{
     'CODE': 'I',  # house code A-P

@@ -165,7 +165,7 @@ class RaspyRFMClient:
         """
         return self._CONTROLUNIT_IMPLEMENTATIONS_DICT[manufacturer].keys()
 
-    def get_device(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
+    def get_controlunit(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
         """
         Use this method to get a device implementation intance
         :param manufacturer: device manufacturer
