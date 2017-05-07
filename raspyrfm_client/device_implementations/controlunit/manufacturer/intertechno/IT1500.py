@@ -10,11 +10,11 @@ class IT1500(Device):
     from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
     from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
 
-    def __init__(self, manufacturer: str = Manufacturer.INTERTECHNO,
-                 model: str = ControlUnitModel.IT_1500):
+    def __init__(self, manufacturer: Manufacturer = Manufacturer.INTERTECHNO,
+                 model: ControlUnitModel = ControlUnitModel.IT_1500):
         super().__init__(manufacturer, model)
 
-    def get_supported_actions(self) -> [str]:
+    def get_supported_actions(self) -> [Action]:
         return [Action.ON, Action.OFF]
 
     def get_channel_config_args(self):

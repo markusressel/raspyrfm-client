@@ -26,21 +26,10 @@ class RaspyRFMClient:
 
     _broadcast_message = b'SEARCH HCGW'
 
-    def __init__(self, host: str = None, port: int = 49880):
+    def __init__(self):
         """
         Creates a new client object.
-
-        :param host: host address of the RaspyRFM module
-        :param port: the port on which the RaspyRFM module is listening
         """
-
-        self._host = host
-        self._port = port
-
-        self._manufacturer = None
-        self._model = None
-        self._firmware_version = None
-
         self.reload_implementation_classes()
 
     def reload_implementation_classes(self):
@@ -48,12 +37,12 @@ class RaspyRFMClient:
         Dynamically reloads device implementations 
         """
         print("Loading implementation classes...")
-        self.reload_gateway_implementations()
+        self._reload_gateway_implementations()
         self._reload_controlunit_implementations()
         print("Done!")
 
     @staticmethod
-    def _import_submodules(package, recursive=True):
+    def __import_submodules(package, recursive=True):
         """ Import all submodules of a module, recursively, including subpackages
 
         :param package: package (name or actual module)
@@ -71,11 +60,11 @@ class RaspyRFMClient:
             full_name = package.__name__ + '.' + name
             results[full_name] = importlib.import_module(full_name)
             if recursive and is_pkg:
-                results.update(RaspyRFMClient._import_submodules(full_name))
+                results.update(RaspyRFMClient.__import_submodules(full_name))
         return results
 
     @staticmethod
-    def _get_all_subclasses(base_class):
+    def __get_all_subclasses(base_class):
         """
         Returns a list of all currently imported classes that are subclasses (even multiple levels)
         of the specified base class.
@@ -86,11 +75,11 @@ class RaspyRFMClient:
 
         for subclass in base_class.__subclasses__():
             all_subclasses.append(subclass)
-            all_subclasses.extend(RaspyRFMClient._get_all_subclasses(subclass))
+            all_subclasses.extend(RaspyRFMClient.__get_all_subclasses(subclass))
 
         return all_subclasses
 
-    def reload_gateway_implementations(self) -> None:
+    def _reload_gateway_implementations(self) -> None:
         """
         Finds gateway implementations in the "raspyrfm_client.device_implementations.gateway.manufacturer" package.
         This works by recursively searching through supbackages and finding classes that have
@@ -99,9 +88,9 @@ class RaspyRFMClient:
         self._GATEWAY_IMPLEMENTATIONS_DICT = {}
 
         from raspyrfm_client.device_implementations.gateway import manufacturer
-        RaspyRFMClient._import_submodules(manufacturer)
+        RaspyRFMClient.__import_submodules(manufacturer)
 
-        for gateway_implementation in RaspyRFMClient._get_all_subclasses(Gateway):
+        for gateway_implementation in RaspyRFMClient.__get_all_subclasses(Gateway):
             gateway_instance = gateway_implementation()
             brand = gateway_instance.get_manufacturer()
             model = gateway_instance.get_model()
@@ -113,7 +102,7 @@ class RaspyRFMClient:
             if brand not in self._GATEWAY_IMPLEMENTATIONS_DICT:
                 self._GATEWAY_IMPLEMENTATIONS_DICT[brand] = {}
 
-            self._GATEWAY_IMPLEMENTATIONS_DICT[brand][model] = gateway_instance
+            self._GATEWAY_IMPLEMENTATIONS_DICT[brand][model] = gateway_implementation
 
     def _reload_controlunit_implementations(self) -> None:
         """
@@ -125,9 +114,9 @@ class RaspyRFMClient:
         self._CONTROLUNIT_IMPLEMENTATIONS_DICT = {}
 
         from raspyrfm_client.device_implementations.controlunit import manufacturer
-        RaspyRFMClient._import_submodules(manufacturer)
+        RaspyRFMClient.__import_submodules(manufacturer)
 
-        for device_implementation in RaspyRFMClient._get_all_subclasses(Device):
+        for device_implementation in RaspyRFMClient.__get_all_subclasses(Device):
             device_instance = device_implementation()
             brand = device_instance.get_manufacturer()
             model = device_instance.get_model()
@@ -154,7 +143,7 @@ class RaspyRFMClient:
         cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
-        cs.sendto(self._broadcast_message, ('255.255.255.255', self._port))
+        cs.sendto(self._broadcast_message, ('255.255.255.255', 49880))
 
         cs.setblocking(True)
         cs.settimeout(1)
@@ -175,9 +164,9 @@ class RaspyRFMClient:
             # "HCGW:VC:Seegel Systeme;MC:RaspyRFM;FW:1.00;IP:192.168.2.124;;"
 
             # try to parse data if valid
-            self._manufacturer = message[message.index('VC:') + 3:message.index(';MC')]
-            self._model = message[message.index('MC:') + 3:message.index(';FW')]
-            self._firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
+            _manufacturer = message[message.index('VC:') + 3:message.index(';MC')]
+            _model = message[message.index('MC:') + 3:message.index(';FW')]
+            _firmware_version = message[message.index('FW:') + 3:message.index(';IP')]
             parsed_host = message[message.index('IP:') + 3:message.index(';;')]
 
             if self._host is None:
@@ -191,44 +180,17 @@ class RaspyRFMClient:
         except socket.timeout:
             return None
 
-    def get_manufacturer(self) -> str:
-        """
-        :return: the manufacturer description
-        """
-        return self._manufacturer
-
-    def get_model(self) -> str:
-        """
-        :return: the model description
-        """
-        return self._model
-
-    def get_host(self) -> str:
-        """
-        :return: the ip/host address of the gateway (if one was found or specified manually)
-        """
-        return self._host
-
-    def get_port(self) -> int:
-        """
-        :return: the port of the gateway
-        """
-        return self._port
-
-    def get_firmware_version(self) -> str:
-        """
-        :return: the gateway firmware version
-        """
-        return self._firmware_version
-
-    def get_gateway(self, manufacturer: Manufacturer, model: GatewayModel) -> Gateway:
+    def get_gateway(self, manufacturer: Manufacturer, model: GatewayModel, host: str = None,
+                    port: int = None) -> Gateway:
         """
         Use this method to get a gateway implementation intance
         :param manufacturer: gateway manufacturer
         :param model: gateway model
+        :param host: gateway host address (optional)
+        :param port: gateway port (optional)
         :return: gateway implementation
         """
-        return self._GATEWAY_IMPLEMENTATIONS_DICT[manufacturer][model]
+        return self._GATEWAY_IMPLEMENTATIONS_DICT[manufacturer][model](host, port)
 
     def get_device(self, manufacturer: Manufacturer, model: ControlUnitModel) -> Device:
         """
@@ -281,11 +243,11 @@ class RaspyRFMClient:
         :param action: action to execute
         """
 
-        if self._host is None:
+        if gateway.get_host() is None:
             print("Missing host, nothing sent.")
             return
 
         message = gateway.generate_code(device, action)
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-        sock.sendto(bytes(message, "utf-8"), (self._host, self._port))
+        sock.sendto(bytes(message, "utf-8"), (gateway.get_host(), gateway.get_port()))

@@ -4,10 +4,10 @@ from raspyrfm_client.device_implementations.gateway.base import Gateway
 
 
 class ITGW(Gateway):
-    def __init__(self):
+    def __init__(self, host: str = None, port: int = 49880):
         from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
         from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
-        super().__init__(Manufacturer.INTERTECHNO, GatewayModel.ITGW)
+        super().__init__(Manufacturer.INTERTECHNO, GatewayModel.ITGW, host, port)
 
     def generate_code(self, device: Device, action: Action) -> str:
         """
@@ -22,14 +22,17 @@ class ITGW(Gateway):
             raise ValueError("Unsupported action: " + str(action))
 
         pulsedata = device.get_pulse_data(action)
-        _head_connair = "0,0,"
-        _code = _head_connair
-        _code = _code + str(pulsedata[1]) + ','  # add repetitions
-        _code = _code + str(5600) + ','
-        _code = _code + str(pulsedata[2]) + ','  # add timebase
+        _head_ = "0,0,"
+        _code = _head_
+        _code += str(pulsedata[1]) + ','  # add repetitions
+        _code += str(11200) + ','
+        _code += str(pulsedata[2]) + ','  # add timebase
 
         _code = _code + str(len(pulsedata[0]) + 1) + ',0,'
         for pulse in pulsedata[0]:
-            _code = _code + str(pulse[0]) + ','
-            _code = _code + str(pulse[1]) + ','
-        return _code[:-1]
+            _code += str(pulse[0]) + ','
+            _code += str(pulse[1]) + ','
+
+        _code = _code[:-3] + str(pulsedata[0][len(pulsedata[0]) - 1][1] * 4)
+        _code += ',0'
+        return _code
