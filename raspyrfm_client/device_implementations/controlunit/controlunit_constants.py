@@ -60,5 +60,3 @@ class ControlUnitModel(Enum):
     FSS33600W = "FSS33600W"
 
     ZTC_S316A = "ZTC-S316A"
-
-    YourModel = "Your Model"
