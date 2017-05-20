@@ -2,13 +2,14 @@ import unittest
 from builtins import print
 
 import rstr
+
 from raspyrfm_client import RaspyRFMClient
 from raspyrfm_client.device_implementations.gateway.manufacturer.gateway_constants import GatewayModel
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
 
 
 class TestStringMethods(unittest.TestCase):
-    def test_random_config(self):
+    def test_random_controlunit_config(self):
         """
         Tests all device_implementations with random configurations.
         """
@@ -61,6 +62,23 @@ class TestStringMethods(unittest.TestCase):
             test_models(manufacturer)
 
         print("All random config device_implementations tests passed!")
+
+    def test_gateway_init(self):
+
+        rfm_client = RaspyRFMClient()
+
+        from raspyrfm_client.device_implementations.gateway.base import Gateway
+
+        def test_gateway(gateway: Gateway):
+            self.assertIsNotNone(gateway)
+
+        def test_models(manufacturer: Manufacturer):
+            for model in rfm_client.get_supported_gateway_models(manufacturer):
+                gateway = rfm_client.get_gateway(manufacturer, model)
+                test_gateway(gateway)
+
+        for manufacturer in rfm_client.get_supported_gateway_manufacturers():
+            test_models(manufacturer)
 
 
 if __name__ == '__main__':
