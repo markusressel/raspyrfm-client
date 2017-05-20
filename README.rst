@@ -1,7 +1,7 @@
 raspyrfm-client
 ===============
 
-A python 3.4+ library that allows the generation of network codes for the RaspyRFM rc module.
+A python 3.4+ library that allows the generation of network codes for the RaspyRFM rc module (and other gateways too!).
 
 Build Status
 ============
@@ -142,6 +142,7 @@ Two (as a dictionary):
     })
 
 **Note** that the **keys always need to be a** :code:`string`.
+The second one is the recommended one as it will often result in a much more readable source code.
 
 For our Brennenstuhl device it would look like this:
 
@@ -178,7 +179,7 @@ To send a code for your device of choice you can combine the objects in this cal
 
 .. code-block:: python
 
-   rfm_client.send(gateway, brennenstuhl_rcs1000, actions.ON)
+   rfm_client.send(gateway, brennenstuhl_rcs1000, Action.ON)
 
 This will generate a code specific to the passed in gateway implementation and send it to it's host address immediately after.
 
@@ -263,7 +264,7 @@ If everything looks good you can use your implementation like any other one.
 
 Exclude a WIP implementation
 ----------------------------
-To prevent the RaspyRFM client from importing your half baked implementation just include a class field like this:
+To prevent the RaspyRFM client from importing your half baked or base class implementation just include a class field like this:
 
 .. code-block:: python
 
@@ -275,8 +276,8 @@ To prevent the RaspyRFM client from importing your half baked implementation jus
 Contributing
 ============
 
-Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks 
-of this repository. Create Github tickets for bugs and new features and comment on the ones that you are interested in.
+GitHub is for social coding: if you want to write code, I encourage contributions through pull requests from forks
+of this repository. Create GitHub tickets for bugs and new features and comment on the ones that you are interested in.
 
 License
 =======
