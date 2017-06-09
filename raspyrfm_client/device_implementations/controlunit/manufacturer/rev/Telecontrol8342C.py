@@ -7,7 +7,7 @@ class Telecontrol(HX2262Compatible):
     _l = 'f'
     _on = ['f', 'f']
     _off = ['0', '0']
-    _repetitions = 5
+    _repetitions = 10
 
     def __init__(self):
         from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
@@ -32,7 +32,7 @@ class Telecontrol(HX2262Compatible):
             bits.append(self._h if cfg['master'] == chr(i + ord('A')) else self._l)
 
         for i in range(3):
-            bits.append(self._h if cfg['slave'] == str(i + 1) else self._l)
+            bits.append(self._h if str(cfg['slave']) == str(i + 1) else self._l)
 
         bits += ['0', 'f', 'f']  # fixed
 
