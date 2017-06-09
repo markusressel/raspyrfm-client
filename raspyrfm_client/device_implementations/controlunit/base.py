@@ -66,7 +66,7 @@ class ControlUnit(object):
         """
         return self._channel
 
-    def get_supported_actions(self) -> [str]:
+    def get_supported_actions(self) -> [Action]:
         """
         :return: the supported actions of this device
         """

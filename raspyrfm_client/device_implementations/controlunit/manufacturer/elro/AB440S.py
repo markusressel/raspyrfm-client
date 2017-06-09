@@ -15,7 +15,7 @@ class AB440S(HX2262Compatible):
 
         super().__init__(Manufacturer.ELRO, ControlUnitModel.AB440S)
 
-    def get_supported_actions(self) -> [str]:
+    def get_supported_actions(self) -> [Action]:
         return [Action.ON, Action.OFF]
 
     def get_channel_config_args(self):
@@ -28,7 +28,7 @@ class AB440S(HX2262Compatible):
             'CH': '^[A-D]$'  # manual: DIP switch E may not be used and has to be turned off!
         }
 
-    def get_bit_data(self, action: str):
+    def get_bit_data(self, action: Action):
         cfg = self.get_channel_config()
         bits = []
 

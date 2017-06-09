@@ -16,7 +16,7 @@ class RCS1000NComfort(HX2262Compatible):
                  model: ControlUnitModel = ControlUnitModel.RCS_1000_N_COMFORT):
         super(HX2262Compatible, self).__init__(manufacturer, model)
 
-    def get_supported_actions(self) -> [str]:
+    def get_supported_actions(self) -> [Action]:
         return [Action.ON, Action.OFF]
 
     def get_channel_config_args(self):
@@ -29,7 +29,7 @@ class RCS1000NComfort(HX2262Compatible):
             'CH': '^[A-E]$'
         }
 
-    def get_bit_data(self, action: str):
+    def get_bit_data(self, action: Action):
         cfg = self.get_channel_config()
         bits = []
 

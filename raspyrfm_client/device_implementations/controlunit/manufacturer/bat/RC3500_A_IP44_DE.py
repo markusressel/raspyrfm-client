@@ -15,7 +15,7 @@ class RC3500_A_IP44_DE(RCS1000NComfort):
                  model: ControlUnitModel = ControlUnitModel.RC3500_A_IP44_DE):
         super(RCS1000NComfort, self).__init__(manufacturer, model)
 
-    def get_bit_data(self, action: str):
+    def get_bit_data(self, action: Action):
         cfg = self.get_channel_config()
         bits = []
 

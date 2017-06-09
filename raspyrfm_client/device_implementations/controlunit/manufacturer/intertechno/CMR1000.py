@@ -15,7 +15,7 @@ class CMR1000(HX2262Compatible):
 
         super().__init__(Manufacturer.INTERTECHNO, ControlUnitModel.CMR_1000)
 
-    def get_supported_actions(self) -> [str]:
+    def get_supported_actions(self) -> [Action]:
         return [Action.ON, Action.OFF]
 
     def get_channel_config_args(self):
@@ -24,7 +24,7 @@ class CMR1000(HX2262Compatible):
             'slave': '^([1-9]|[0][1-9]|[1][1-6])$'
         }
 
-    def get_bit_data(self, action: str):
+    def get_bit_data(self, action: Action):
         cfg = self.get_channel_config()
         bits = []
 
