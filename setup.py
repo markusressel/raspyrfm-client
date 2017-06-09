@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='raspyrfm_client',
-    version='1.2.0',
+    version='1.2.1',
     description='A library to send rc signals with the RaspyRFM module',
     license='GPLv3+',
     author='Markus Ressel',
@@ -10,9 +10,9 @@ setup(
     url='https://www.markusressel.de',
     packages=find_packages(),
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
     ],
     install_requires=[
     ],
