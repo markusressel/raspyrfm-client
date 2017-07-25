@@ -5,8 +5,34 @@ A python 3.4+ library that allows the generation of network codes for the RaspyR
 
 Build Status
 ============
-.. image:: https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=master
-:target: https://travis-ci.org/markusressel/raspyrfm-client
+
+.. |build_master| image:: https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=master
+:target: https://travis-ci.org/markusressel/raspyrfm-client/branches
+
+.. |build_beta| image:: https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=beta
+:target: https://travis-ci.org/markusressel/raspyrfm-client/branches
+
+.. |build_dev| image:: https://travis-ci.org/markusressel/raspyrfm-client.svg?branch=dev
+:target: https://travis-ci.org/markusressel/raspyrfm-client/branches
+
+
+.. |codebeat_master| image:: https://codebeat.co/badges/fcac9cfe-b6a2-4c4a-938d-42214371dc3d
+:target: https://codebeat.co/projects/github-com-markusressel-raspyrfm-client-master
+
+.. |codebeat_beta| image:: https://codebeat.co/badges/f11a5607-2193-4e86-b924-xxxxxxxxx
+:target: https://codebeat.co/projects/github-com-markusressel-xs1-api-client-beta
+
+.. |codebeat_dev| image:: https://codebeat.co/badges/6ef4cbdd-a452-45b2-8ee8-f7a09e53689f
+:target: https://codebeat.co/projects/github-com-markusressel-raspyrfm-client-dev
+
++--------------------+------------------+-----------------+
+| Master             | Beta             | Dev             |
++====================+==================+=================+
+| |build_master|     | |build_beta|     | |build_dev|     |
++--------------------+------------------+-----------------+
+| |codebeat_master|  | |codebeat_beta|  | |codebeat_dev|  |
++--------------------+------------------+-----------------+
+
 
 How to use
 ==========
