@@ -1,6 +1,9 @@
 raspyrfm-client
 ===============
 
+.. image:: https://badge.fury.io/py/raspyrfm-client.svg
+    :target: https://badge.fury.io/py/raspyrfm-client
+
 A python 3.4+ library that allows the generation of network codes for the RaspyRFM rc module (and other gateways too!).
 
 Build Status
