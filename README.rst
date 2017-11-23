@@ -88,6 +88,7 @@ To get a quick overview of what gateway **manufacturers** and **models** are sup
    rfm_client.list_supported_gateways()
 
 Create a gateway instance with the specified :code:`IP` and :code:`Port` of your Gateway by using:
+
 .. code-block:: python
 
    gateway = rfm_client.get_gateway(Manufacturer.SEEGEL_SYSTEME, GatewayModel.RASPYRFM, "192.168.2.10", 9876)
@@ -216,7 +217,7 @@ The :code:`raspyrfm-client` library is designed so you can implement custom devi
 
 File Structure
 --------------
-All :code:`ControlUnit` implementations are located in the :code:`/device_implementations/controlunit/manufacturer/` module and implement the base class :code:`Device` that can be found in :code:`/device_implementations/controlunit//base.py`.
+All :code:`ControlUnit` implementations are located in the :code:`/device_implementations/controlunit/manufacturer/` module and implement the base class :code:`Device` that can be found in :code:`/device_implementations/controlunit/base.py`.
 
 Create a new :code:`ControlUnit`
 --------------------------------
