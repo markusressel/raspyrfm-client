@@ -22,7 +22,7 @@ Build Status
 .. |codebeat_master| image:: https://codebeat.co/badges/fcac9cfe-b6a2-4c4a-938d-42214371dc3d
     :target: https://codebeat.co/projects/github-com-markusressel-raspyrfm-client-master
 
-.. |codebeat_beta| image:: https://codebeat.co/badges/f11a5607-2193-4e86-b924-xxxxxxxxx
+.. |codebeat_beta| image:: https://codebeat.co/badges/c6c09759-3f34-4a16-b17e-d7989b3f7fae
     :target: https://codebeat.co/projects/github-com-markusressel-xs1-api-client-beta
 
 .. |codebeat_dev| image:: https://codebeat.co/badges/6ef4cbdd-a452-45b2-8ee8-f7a09e53689f
