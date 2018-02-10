@@ -6,6 +6,8 @@ class Action(Enum):
 
     DIMM = "Dimm"
 
+    BRIGHT = "Bright"
+
     OFF = "Off"
 
     PAIR = "Pair"
