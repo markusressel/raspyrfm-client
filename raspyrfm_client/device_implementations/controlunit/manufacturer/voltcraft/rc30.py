@@ -5,7 +5,7 @@ from raspyrfm_client.device_implementations.controlunit.base import ControlUnit
 class RC30(ControlUnit):
     _repetitions = 4
     _timebase = 680
-    #_pausedata = 80920 µS = 119 steps  # not really needed, just for keeping reenginering data
+    # _pausedata = 80920 µS = 119 steps  # not really needed, just for keeping reenginering data
 
     from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
     from raspyrfm_client.device_implementations.controlunit.controlunit_constants import ControlUnitModel
@@ -30,32 +30,33 @@ class RC30(ControlUnit):
         raw = []
 
         cfg = self.get_channel_config()
-        #add 12 bits for housecode
+        # add 12 bits for housecode
         for bit in cfg['CODE']:
             raw += [1] if bit == '1' else [0]
 
+        unit_code = int(cfg['UNIT'])
         if action in [Action.BRIGHT, Action.DIMM]:
             raw += [1, 1]
-        elif cfg['UNIT'] == '1':
+        elif unit_code == 1:
             raw += [0, 0]
-        elif cfg['UNIT'] == '2':
+        elif unit_code == 2:
             raw += [1, 0]
-        elif cfg['UNIT'] == '3':
+        elif unit_code == 3:
             raw += [0, 1]
-        elif cfg['UNIT'] == '4':
+        elif unit_code == 4:
             raw += [1, 1]
 
-        raw += [1] if action in [Action.BRIGHT, Action.DIMM] else [0] #1 for dim buttons & all-on buttons, else 0
+        raw += [1] if action in [Action.BRIGHT, Action.DIMM] else [0]  # 1 for dim buttons & all-on buttons, else 0
 
         if action in [Action.ON, Action.DIMM]:
-            raw += [1] #0 for off / all-off / bright, 1 for on / all-on / dim
+            raw += [1]  # 0 for off / all-off / bright, 1 for on / all-on / dim
         elif action in [Action.OFF, Action.BRIGHT]:
-            raw += [0] #0 for off / all-off / bright, 1 for on / all-on / dim
+            raw += [0]  # 0 for off / all-off / bright, 1 for on / all-on / dim
 
-        raw += [1] if action in [Action.BRIGHT, Action.DIMM] else [0]  #1 for dim buttons, else 0
-        raw += [0]  #always 0
+        raw += [1] if action in [Action.BRIGHT, Action.DIMM] else [0]  # 1 for dim buttons, else 0
+        raw += [0]  # always 0
 
-        #checksum
+        # checksum
         raw += [1] if (raw[12] ^ raw[14] ^ raw[16]) != 0 else [0]
         raw += [1] if (raw[13] ^ raw[15] ^ raw[17]) != 0 else [0]
 
@@ -67,6 +68,6 @@ class RC30(ControlUnit):
         tuples = []
 
         for i in range(0, len(times), 2):
-            tuples += [(times[i], times[i+1])]
+            tuples += [(times[i], times[i + 1])]
 
         return tuples, self._repetitions, self._timebase
