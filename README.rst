@@ -2,7 +2,7 @@
     :target: https://badge.fury.io/py/raspyrfm-client
 
 raspyrfm-client |pypi_version|
-===============
+==============================
 
 A python 3.4+ library that allows the generation of network codes for the RaspyRFM rc module (and other gateways too!).
 
@@ -191,7 +191,7 @@ Generate action codes
 ^^^^^^^^^^^^^^^^^^^^^
 Now that you have a properly set up :code:`ControlUnit` you can generate codes for it's supported actions by using an :code:`Action` enum constant that you imported previously.
 
-To get a list of supported actions for a :code:`ControlUnit`call:
+To get a list of supported actions for a :code:`ControlUnit` call:
 
 .. code-block:: python
 
