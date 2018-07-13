@@ -2,7 +2,7 @@ import subprocess
 
 from setuptools import setup, find_packages
 
-VERSION_NUMBER = "1.2.3"
+VERSION_NUMBER = "1.2.4"
 
 GIT_BRANCH = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
 GIT_BRANCH = GIT_BRANCH.decode()  # convert to standard string
@@ -22,14 +22,35 @@ else:
     DEVELOPMENT_STATUS = "Development Status :: 2 - Pre-Alpha"
     VERSION_NAME = "%s-%s" % (VERSION_NUMBER, GIT_BRANCH)
 
+
+def readme() -> [str]:
+    with open('README.rst') as f:
+        return f.read()
+
+
+def install_requirements() -> [str]:
+    return read_requirements_file("requirements.txt")
+
+
+def test_requirements() -> [str]:
+    return read_requirements_file("test_requirements.txt")
+
+
+def read_requirements_file(file_name: str):
+    with open(file_name) as f:
+        requirements_file = f.readlines()
+    return [r.strip() for r in requirements_file]
+
+
 setup(
     name='raspyrfm_client',
     version=VERSION_NAME,
     description='A library to send rc signals with the RaspyRFM module',
+    long_description=readme(),
     license='GPLv3+',
     author='Markus Ressel',
     author_email='mail@markusressel.de',
-    url='https://www.markusressel.de',
+    url='https://github.com/markusressel/raspyrfm-client',
     packages=find_packages(),
     classifiers=[
         DEVELOPMENT_STATUS,
@@ -40,9 +61,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
     ],
-    install_requires=[
-    ],
-    tests_require=[
-        'rstr'
-    ]
+    install_requires=install_requirements(),
+    tests_require=test_requirements()
 )

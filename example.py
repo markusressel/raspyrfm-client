@@ -7,6 +7,11 @@ from raspyrfm_client.device_implementations.manufacturer_constants import Manufa
 """ RaspyRFM Client """
 rfm_client = RaspyRFMClient()
 
+print("Supported Gateways:")
+rfm_client.list_supported_gateways()
+
+print("")
+print("Supported Controlunits:")
 rfm_client.list_supported_controlunits()
 
 raspyrfm = rfm_client.get_gateway(Manufacturer.SEEGEL_SYSTEME, GatewayModel.RASPYRFM, "192.168.2.10")
