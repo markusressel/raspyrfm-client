@@ -263,5 +263,5 @@ class RaspyRFMClient:
 
         message = gateway.generate_code(device, action)
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-        sock.sendto(bytes(message, "utf-8"), (gateway.get_host(), gateway.get_port()))
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:  # UDP
+            sock.sendto(bytes(message, "utf-8"), (gateway.get_host(), gateway.get_port()))
