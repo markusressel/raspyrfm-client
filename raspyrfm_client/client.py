@@ -215,36 +215,36 @@ class RaspyRFMClient:
                 all_gateways.append(self.get_gateway(manufacturer, model))
 
         # send the broadcast
-        cs = socket.socket(AF_INET, SOCK_DGRAM)
-        cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-        cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        with socket.socket(AF_INET, SOCK_DGRAM) as cs:
+            cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+            cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
-        _broadcast_message = b'SEARCH HCGW'
+            _broadcast_message = b'SEARCH HCGW'
 
-        cs.sendto(_broadcast_message, ('255.255.255.255', 49880))
+            cs.sendto(_broadcast_message, ('255.255.255.255', 49880))
 
-        cs.setblocking(True)
-        cs.settimeout(1)
+            cs.setblocking(True)
+            cs.settimeout(1)
 
-        # receive the message(s)
-        try:
-            while True:
-                data, address = cs.recvfrom(4096)
-                # print("Received message: \"%s\"" % data)
-                # print("Address: " + address[0])
+            # receive the message(s)
+            try:
+                while True:
+                    data, address = cs.recvfrom(4096)
+                    # print("Received message: \"%s\"" % data)
+                    # print("Address: " + address[0])
 
-                message = data.decode()
+                    message = data.decode()
 
-                # for each device implementation, check if the response matches the expected pattern
-                # and add an instance of this gateway implementation to the found_gateways list
-                for gateway in all_gateways:
-                    if re.match(gateway.get_search_response_regex_literal(), message) is not None:
-                        found_gateways.append(gateway.create_from_broadcast(address[0], message))
+                    # for each device implementation, check if the response matches the expected pattern
+                    # and add an instance of this gateway implementation to the found_gateways list
+                    for gateway in all_gateways:
+                        if re.match(gateway.get_search_response_regex_literal(), message) is not None:
+                            found_gateways.append(gateway.create_from_broadcast(address[0], message))
 
-        except socket.timeout:
-            return found_gateways
-        finally:
-            return found_gateways
+            except socket.timeout:
+                return found_gateways
+            finally:
+                return found_gateways
 
     def send(self, gateway: Gateway, device: ControlUnit, action: Action) -> None:
         """
