@@ -40,8 +40,8 @@ Home Assistant
 ==============
 The initial goal of this library was to be able to integrate the SimpleSolutions ConnAir gateway with `Home Assistant <https://www.home-assistant.io>`_. This gateway is sadly not sold anymore but there are other alternatives like the Intertechno Gateway or the `ConnAir Emulator script <https://github.com/Phunkafizer/RaspyRFM/blob/master/connair.py>`_ that can be used on a Raspberry Pi equipped with a 433MHz radio like the `RaspyRFM from Seegel Systeme <https://www.seegel-systeme.de/produkt/raspyrfm-ii/>`_.
 
-You can find the related integration documentation here:
-`RaspyRFM Home Assistant component documentation<https://www.home-assistant.io/components/raspyrfm/>`_
+You can find the related integration documentation here: 
+`RaspyRFM Home Assistant component documentation <https://www.home-assistant.io/components/switch.raspyrfm/>`_
 
 How to use
 ==========
