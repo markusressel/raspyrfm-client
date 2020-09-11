@@ -4,9 +4,12 @@ from setuptools import setup, find_packages
 
 VERSION_NUMBER = "1.2.8"
 
-GIT_BRANCH = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-GIT_BRANCH = GIT_BRANCH.decode()  # convert to standard string
-GIT_BRANCH = GIT_BRANCH.rstrip()  # remove unnecessary whitespace
+try:
+    GIT_BRANCH = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    GIT_BRANCH = GIT_BRANCH.decode()  # convert to standard string
+    GIT_BRANCH = GIT_BRANCH.rstrip()  # remove unnecessary whitespace
+except:
+    GIT_BRANCH = "master"
 
 if GIT_BRANCH == "master":
     DEVELOPMENT_STATUS = "Development Status :: 5 - Production/Stable"
@@ -60,7 +63,7 @@ setup(
     author='Markus Ressel',
     author_email='mail@markusressel.de',
     url='https://github.com/markusressel/raspyrfm-client',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     classifiers=[
         DEVELOPMENT_STATUS,
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
