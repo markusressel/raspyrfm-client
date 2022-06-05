@@ -21,7 +21,7 @@ class CMR1000(HX2262Compatible):
     def get_channel_config_args(self):
         return {
             'master': '^[A-P]$',
-            'slave': '^([1-9]|[0][1-9]|[1][1-6])$'
+            'slave': '^([1-9]|0[1-9]|1[0-6])$'
         }
 
     def get_bit_data(self, action: Action):

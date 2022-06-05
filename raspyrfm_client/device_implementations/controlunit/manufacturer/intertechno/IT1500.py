@@ -20,7 +20,7 @@ class IT1500(ControlUnit):
     def get_channel_config_args(self):
         return {
             'CODE': '[01]{26}$',
-            'UNIT': '^([1-9]|0[0-9]|1[1-6])$'
+            'UNIT': '^([1-9]|0[1-9]|1[0-6])$'
         }
 
     def get_pulse_data(self, action: Action):
