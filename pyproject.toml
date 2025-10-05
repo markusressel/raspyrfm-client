@@ -14,10 +14,11 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.4,<4.0"
+python = ">=3.12,<4.0"
 
 [tool.poetry.group.test.dependencies]
 xeger = "*"
+pytest = "*"
 
 [build-system]
 requires = ["poetry-core"]
