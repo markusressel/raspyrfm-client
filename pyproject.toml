@@ -19,6 +19,7 @@ python = ">=3.12,<4.0"
 [tool.poetry.group.test.dependencies]
 xeger = "*"
 pytest = "*"
+setuptools = "*"
 
 [build-system]
 requires = ["poetry-core"]
