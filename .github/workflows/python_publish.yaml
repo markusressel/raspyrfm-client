@@ -1,3 +1,5 @@
+# WARN: The name of this workflow file is directly connected to PyPi for automatic deployment.
+# If you change the name, you must also change it in the PyPi settings for this repository.
 name: Upload Python Package
 
 on:
