@@ -1,12 +1,11 @@
 import unittest
 from builtins import print
 
-import rstr
+from xeger import xeger
 
 from raspyrfm_client import RaspyRFMClient
 from raspyrfm_client.device_implementations.gateway.base import Gateway
 from raspyrfm_client.device_implementations.manufacturer_constants import Manufacturer
-
 
 class TestStringMethods(unittest.TestCase):
     def test_random_controlunit_config(self):
@@ -38,7 +37,7 @@ class TestStringMethods(unittest.TestCase):
                 channel_config = {}
 
                 for arg in channel_config_args:
-                    channel_config[arg] = rstr.xeger(channel_config_args[arg])
+                    channel_config[arg] = xeger(channel_config_args[arg])
 
                 device.set_channel_config(**channel_config)
 
