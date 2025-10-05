@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "raspyrfm-client"
+version = "1.2.8"
+description = "A library to send rc signals with the RaspyRFM module"
+authors = ["Markus Ressel <mail@markusressel.de>"]
+license = "GPL-3.0-or-later"
+readme = "README.rst"
+homepage = "https://github.com/markusressel/raspyrfm-client"
+repository = "https://github.com/markusressel/raspyrfm-client"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+
+[tool.poetry.group.test.dependencies]
+xeger = "*"
+pytest = "*"
+setuptools = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
