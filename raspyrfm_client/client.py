@@ -242,9 +242,10 @@ class RaspyRFMClient:
                             found_gateways.append(gateway.create_from_broadcast(address[0], message))
 
             except socket.timeout:
-                return found_gateways
-            finally:
-                return found_gateways
+                # ignore timeout errors
+                pass
+
+            return found_gateways
 
     def send(self, gateway: Gateway, device: ControlUnit, action: Action) -> None:
         """
