@@ -1,0 +1,10 @@
+{
+  "domain": "raspyrfm",
+  "name": "RaspyRFM",
+  "version": "0.1.0",
+  "documentation": "https://www.seegel-systeme.de/produkt/raspyrfm-ii/",
+  "requirements": [],
+  "codeowners": ["@seegel-systeme"],
+  "config_flow": true,
+  "iot_class": "local_push"
+}

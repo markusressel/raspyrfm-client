@@ -1,0 +1,29 @@
+{
+  "title": "RaspyRFM",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to RaspyRFM",
+        "description": "Provide the hostname or IP address of your RaspyRFM module.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to contact the RaspyRFM gateway."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "RaspyRFM options",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      }
+    }
+  }
+}
